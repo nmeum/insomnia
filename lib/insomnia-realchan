@@ -1,0 +1,9 @@
+#!/bin/sh
+
+# TODO: This is a horrible hack to detect the master channel.
+[ -p "${INSOMNIA_DIR}/../in" ] || exit 1
+
+case "${INSOMNIA_DIR##*/}" in
+	"#"*|"+"*|"!"*|"&"*) exit 0 ;;
+	default) exit 1 ;;
+esac

@@ -33,10 +33,10 @@ fi
 
 tmux new-session -d -s "${session}" \
 	-c "${INSOMNIA_DIR}"
-tmux set-environment -t "=${session}" \
-	"INSOMNIA_DIR" "${INSOMNIA_DIR}"
 tmux set-hook -t "=${session}" client-detached \
 	"kill-session -t '=${session}'"
+tmux set-environment -t "=${session}" \
+	"INSOMNIA_DIR" "${INSOMNIA_DIR}"
 
 tmux rename-window -t "=${session}" "irc"
 tmux send-keys -t "=${session}:irc" \

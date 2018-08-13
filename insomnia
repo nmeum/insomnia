@@ -31,17 +31,7 @@ if tmux has-session -t "=${session}" >/dev/null 2>&1; then
 	exit 1
 fi
 
-tmux new-session -d -s "${session}" \
-	-c "${INSOMNIA_DIR}"
-tmux set-hook -t "=${session}" client-detached \
-	"kill-session -t '=${session}'"
-tmux set-environment -t "=${session}" \
-	"INSOMNIA_DIR" "${INSOMNIA_DIR}"
-
-tmux set-option -t "=${session}" \
-	pane-border-status top
-tmux set-option -t "=${session}" \
-	pane-border-format "$("${insexec}" insomnia-topic)"
+"${insexec}" insomnia-tmux "${session}"
 
 tmux rename-window -t "=${session}" "irc"
 tmux send-keys -t "=${session}:irc" \

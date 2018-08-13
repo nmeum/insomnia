@@ -1,0 +1,18 @@
+#!/bin/sh
+
+[ $# -eq 1 ] || exit 1
+session="${1}"
+
+opt() {
+	tmux set-option -t "=${session}" "$@"
+}
+
+tmux new-session -d -s "${session}"
+tmux set-hook -t "=${session}" client-detached \
+	"kill-session -t '=${session}'"
+tmux set-environment -t "=${session}" \
+	"INSOMNIA_DIR" "${INSOMNIA_DIR}"
+
+opt status off
+opt pane-border-status top
+opt pane-border-format "$(insomnia-topic)"

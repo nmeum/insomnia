@@ -1,7 +1,7 @@
 #!/bin/sh
 set -e
 
-libdir="${PWD}/lib"
+insexec="${PWD}/lib/insomnia-exec"
 
 : ${INSOMNIA_DIR:=${HOME}/irc}
 export INSOMNIA_DIR
@@ -44,6 +44,6 @@ tmux send-keys -t "=${session}:irc" \
 
 tmux split-window -v -p 1 -t "=${session}:irc"
 tmux send-keys -t "=${session}:irc" \
-	"${libdir}/insomnia-input -p '[${CHANNEL:-(status)}] '" C-m
+	""${insexec}" insomnia-input -p '[${CHANNEL:-(status)}] '" C-m
 
 exec tmux attach -t "${session}"

@@ -38,6 +38,18 @@ tmux set-hook -t "=${session}" client-detached \
 tmux set-environment -t "=${session}" \
 	"INSOMNIA_DIR" "${INSOMNIA_DIR}"
 
+border_text=
+if [ -n "${CHANNEL}" ]; then
+	border_text="$("${insexec}" insomnia-topic)"
+else
+	border_text="[(insomnia)] The friendly hii(1) frontend"
+fi
+
+tmux set-option -t "=${session}" \
+	pane-border-status top
+tmux set-option -t "=${session}" \
+	pane-border-format "${border_text}"
+
 tmux rename-window -t "=${session}" "irc"
 tmux send-keys -t "=${session}:irc" \
 	"tail -f '${INSOMNIA_DIR}/out'" C-m

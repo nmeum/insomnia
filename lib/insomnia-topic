@@ -1,0 +1,4 @@
+#!/bin/sh
+
+insomnia-rev | awk -vFS=": " \
+	'/^[0-9]+ \[\*\] topic for .+ is: .+$/ { print($2); exit }'

@@ -1,0 +1,49 @@
+#!/bin/sh
+set -e
+
+libdir="${PWD}/lib"
+
+: ${INSOMNIA_DIR:=${HOME}/irc}
+export INSOMNIA_DIR
+
+if [ $# -lt 1 ]; then
+	echo "USAGE: ${0##*/} SERVER [CHANNEL]" 1>&2
+	exit 1
+fi
+
+SERVER="${1}"
+CHANNEL="${2}"
+
+INSOMNIA_DIR="${INSOMNIA_DIR}/${SERVER}/${CHANNEL}"
+if [ ! -d "${INSOMNIA_DIR}" ]; then
+	echo "'${INSOMNIA_DIR}' is not a directory or doesn't exist" 1>&2
+	exit 1
+fi
+
+# TODO: Special characters such as `.` or `#` cannot be used in tmux
+# sesion names, thus we simply pick a very simple name for the session.
+# The issue here being that the name is not unique and only a single
+# insomnia tmux instance can thus exist at a time.
+session="insomnia"
+
+if tmux has-session -t "=${session}" >/dev/null 2>&1; then
+	echo "An insomnia tmux session does already exits" 1>&2
+	exit 1
+fi
+
+tmux new-session -d -s "${session}" \
+	-c "${INSOMNIA_DIR}"
+tmux set-environment -t "=${session}" \
+	"INSOMNIA_DIR" "${INSOMNIA_DIR}"
+tmux set-hook -t "=${session}" client-detached \
+	"kill-session -t '=${session}'"
+
+tmux rename-window -t "=${session}" "irc"
+tmux send-keys -t "=${session}:irc" \
+	"tail -f '${INSOMNIA_DIR}/out'" C-m
+
+tmux split-window -v -p 1 -t "=${session}:irc"
+tmux send-keys -t "=${session}:irc" \
+	"${libdir}/insomnia-input -p '[${CHANNEL:-(status)}] '" C-m
+
+exec tmux attach -t "${session}"

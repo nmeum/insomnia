@@ -5,5 +5,5 @@
 
 case "${INSOMNIA_DIR##*/}" in
 	"#"*|"+"*|"!"*|"&"*) exit 0 ;;
-	default) exit 1 ;;
+	*) exit 1 ;;
 esac

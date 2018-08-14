@@ -35,7 +35,7 @@ fi
 
 tmux rename-window -t "=${session}" "irc"
 tmux send-keys -t "=${session}:irc" \
-	"tail -f '${INSOMNIA_DIR}/out'" C-m
+	""${insexec}" insomnia-tail" C-m
 
 tmux split-window -v -p 1 -t "=${session}:irc"
 tmux send-keys -t "=${session}:irc" \

@@ -1,0 +1,4 @@
+#!/bin/sh
+
+tail -f "${INSOMNIA_DIR}/out" | \
+	insomnia-strftime

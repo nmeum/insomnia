@@ -30,11 +30,13 @@ fi
 
 # TODO: It would be nice if we could significantly reduce the height of
 # the window for insomnia-input. Unfortunately, tmux has a minimum pane
-# height of 2 rows and also resizes the pane automatically.
+# height of 2 rows making this hardly possible.
 tmux new-session -d -s "${session}" \
 	"env ${vars} insomnia-output"
 tmux set-hook -t "=${session}" client-detached \
 	"kill-session -t '=${session}'"
+tmux set-hook -t "=${session}" client-resized \
+	"resize-pane -t '=insomnia.bottom' -y 2"
 tmux split-window -t "=${session}:^" \
 	"env ${vars} insomnia-input"
 tmux rename-window -t "=${session}" \

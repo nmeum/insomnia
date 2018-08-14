@@ -1,14 +1,13 @@
 #!/bin/sh
 set -e
 
-INFP="${INSOMNIA_DIR}/in"
-
-if [ ! -p "${INFP}" ]; then
-	echo "'${INFP}' isn't a FIFO or does not exist" 1>&2
+infp="${INSOMNIA_DIR}/in"
+if [ ! -p "${infp}" ]; then
+	echo "'${infp}' isn't a FIFO or does not exist" 1>&2
 	exit 1
 fi
 
 input "$@" | while read -r line; do
 	# TODO: Implement shortcut commmands, e.g. `/j <CHAN>`.
-	printf "%s\n" "${line}" > "${INFP}"
+	printf "%s\n" "${line}" > "${infp}"
 done

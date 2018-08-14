@@ -1,4 +1,10 @@
 #!/bin/sh
+set -e
 
-tail -f "${INSOMNIA_DIR}/out" | \
-	insomnia-strftime
+outfp="${INSOMNIA_DIR}/out"
+if [ ! -f "${outfp}" ]; then
+	echo "'${outfp}' isn't a regular file or does not exist" 1>&2
+	exit 1
+fi
+
+tail -f "${outfp}" | insomnia-strftime

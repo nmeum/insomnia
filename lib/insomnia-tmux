@@ -10,8 +10,12 @@ opt() {
 tmux new-session -d -s "${session}"
 tmux set-hook -t "=${session}" client-detached \
 	"kill-session -t '=${session}'"
+
+# TODO: set-environment only seems to effect new windows.
 tmux set-environment -t "=${session}" \
 	"INSOMNIA_DIR" "${INSOMNIA_DIR}"
+tmux split-window -t "=${session}.1"
+tmux kill-pane -t "=${session}.1"
 
 opt status off
 opt pane-border-status top

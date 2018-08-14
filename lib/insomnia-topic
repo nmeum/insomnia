@@ -7,5 +7,5 @@ if insomnia-okchan "${name}"; then
 	insomnia-rev | awk -vFS=": " \
 		'/^[0-9]+ \[\*\] topic for .+ is: .+$/ { print($2); exit }'
 else
-	printf "[(insomnia)] %s\n" "${name}"
+	echo "[(insomnia)]${name:+ $name}"
 fi

@@ -39,6 +39,6 @@ tmux send-keys -t "=${session}:irc" \
 
 tmux split-window -v -p 1 -t "=${session}:irc"
 tmux send-keys -t "=${session}:irc" \
-	""${insexec}" insomnia-input -p '[${CHANNEL:-(status)}] '" C-m
+	""${insexec}" insomnia-input" C-m
 
 exec tmux attach -t "${session}"

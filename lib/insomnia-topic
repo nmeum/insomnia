@@ -1,9 +1,11 @@
 #!/bin/sh
 
-if insomnia-realchan; then
+name="${INSOMNIA_DIR##*/}"
+
+if insomnia-okchan "${name}"; then
 	# TODO: Terminate if there is no topic for the channel
 	insomnia-rev | awk -vFS=": " \
 		'/^[0-9]+ \[\*\] topic for .+ is: .+$/ { print($2); exit }'
 else
-	printf "[(insomnia)] %s\n" "${INSOMNIA_DIR##*/}"
+	printf "[(insomnia)] %s\n" "${name}"
 fi

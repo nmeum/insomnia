@@ -1,6 +1,10 @@
 #!/bin/sh
 set -e
 
+preamble() {
+	echo "Input is send to the channel, prefix commands with a backslash."
+}
+
 infp="${INSOMNIA_DIR}/in"
 if [ ! -p "${infp}" ]; then
 	echo "'${infp}' isn't a FIFO or does not exist" 1>&2
@@ -8,7 +12,9 @@ if [ ! -p "${infp}" ]; then
 fi
 
 name="${INSOMNIA_DIR##*/}"
+
+preamble
 input -p "[${name:-(status)}] " | while read -r line; do
 	# TODO: Implement shortcut commmands, e.g. `/j <CHAN>`.
-	printf "%s\n" "${line}" > "${infp}"
+	preamble && printf "%s\n" "${line}" > "${infp}"
 done

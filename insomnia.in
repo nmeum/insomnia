@@ -1,20 +1,17 @@
 #!/bin/sh
 set -e
 
-insexec="${PWD}/lib/insomnia-exec"
-
-: ${INSOMNIA_DIR:=${HOME}/irc}
-export INSOMNIA_DIR
-
 if [ $# -lt 1 ]; then
 	echo "USAGE: ${0##*/} SERVER [CHANNEL]" 1>&2
 	exit 1
 fi
 
-SERVER="${1}"
-CHANNEL="${2}"
+export PATH="${PATH}:@LIBDIR@"
+export INSOMNIA_DIR="${INSOMNIA_DIR:-$HOME/irc}/${1}/${2}"
 
-INSOMNIA_DIR="${INSOMNIA_DIR}/${SERVER}/${CHANNEL}"
+# tmux doesn't copy environment variables, pass them explicitly.
+vars="INSOMNIA_DIR="${INSOMNIA_DIR}" PATH="${PATH}:@LIBDIR@""
+
 if [ ! -d "${INSOMNIA_DIR}" ]; then
 	echo "'${INSOMNIA_DIR}' is not a directory or doesn't exist" 1>&2
 	exit 1
@@ -31,14 +28,14 @@ if tmux has-session -t "=${session}" >/dev/null 2>&1; then
 	exit 1
 fi
 
-"${insexec}" insomnia-tmux "${session}"
+insomnia-tmux "${session}"
 
 tmux rename-window -t "=${session}" "irc"
 tmux send-keys -t "=${session}:irc" \
-	""${insexec}" insomnia-output" C-m
+	"env ${vars} insomnia-output" C-m
 
 tmux split-window -v -p 1 -t "=${session}:irc"
 tmux send-keys -t "=${session}:irc" \
-	""${insexec}" insomnia-input" C-m
+	"env ${vars} insomnia-input" C-m
 
 exec tmux attach -t "${session}"

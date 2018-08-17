@@ -2,21 +2,33 @@
 
 A frontend for the [hii][hii github] IRC client.
 
-## Motivation
-
-**TOOO**
-
 ## Status
 
-**TODO**
+This is currently under development and I didn't replace my irssi-based
+setup with this yet, thus it doesn't have a single user and is likely
+full of bugs.
 
 ## Dependencies
 
-**TODO**
+insomnia depends on the following non-standard utilities:
 
-## Installation
+* [hii][hii github]
+* [input][input github]
+* [tmux][tmux hompepage]
 
-**TODO**
+## Usage
+
+hii needs to be built by invoking the following command:
+
+	$ make
+
+Afterwards the generated `insomnia` script can be invoked as follows:
+
+	$ ./insomnia irc.hackint.eu '#hii'
+
+This will only work if an `hii` instance for `irc.hackint.eu` is already
+running in the background and if the user already joined the `#hii`
+channel.
 
 ## License
 
@@ -34,3 +46,5 @@ You should have received a copy of the GNU General Public License along
 with this program. If not, see <http://www.gnu.org/licenses/>.
 
 [hii github]: https://github.com/nmeum/hii
+[input github]: https://github.com/nmeum/input
+[tmux homepage]: https://tmux.github.io

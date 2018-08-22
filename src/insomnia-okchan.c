@@ -10,6 +10,8 @@
 //
 // https://github.com/lrstanley/girc/blob/102f17f86306c2152a8c6188f9bb8b0e7288de31/format.go#L157
 
+#define INVALCHARS "\0\a\r\n ,:"
+
 int
 main(int argc, char **argv) {
 	int i;
@@ -39,7 +41,7 @@ main(int argc, char **argv) {
 	}
 
 	while ((c = *channel++)) {
-		if (strchr("\0\a\r\n ,:", c))
+		if (memchr(INVALCHARS, c, strlen(INVALCHARS)))
 			return EXIT_FAILURE;
 	}
 

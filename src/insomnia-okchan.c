@@ -35,6 +35,7 @@ main(int argc, char **argv) {
 			return EXIT_FAILURE;
 
 		for (i = 0; i < 6; i++) {
+			// TODO: this depends on the current locale
 			if (!isdigit(channel[i]) && !isupper(channel[i]))
 				return EXIT_FAILURE;
 		}

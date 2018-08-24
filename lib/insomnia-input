@@ -11,10 +11,15 @@ if [ ! -p "${infp}" ]; then
 	exit 1
 fi
 
+nickfp="${INSOMNIA_DIR}/usr"
+[ -S "${nickfp}" ] || unset -v nickfp
+
 name="${INSOMNIA_DIR##*/}"
 
 preamble
-input -p "[${name:-(status)}] " | while read -r line; do
+input ${nickfp:+-c "insomnia-unix '${nickfp}'"} \
+		-p "[${name:-(status)}] " \
+		| while read -r line; do
 	# TODO: Implement shortcut commmands, e.g. `/j <CHAN>`.
 	preamble && printf "%s\n" "${line}" > "${infp}"
 done

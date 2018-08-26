@@ -7,4 +7,6 @@ if [ ! -f "${outfp}" ]; then
 	exit 1
 fi
 
-tail -f "${outfp}" | insomnia-strftime
+tail -f "${outfp}" | \
+	insomnia-track-topic | \
+	insomnia-strftime

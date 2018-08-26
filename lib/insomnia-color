@@ -1,0 +1,36 @@
+#!/usr/bin/awk -f
+
+BEGIN {
+	for (i = 1; i < 128; i++)
+		ascii = sprintf("%s%c", ascii, i)
+
+	COLORS_LEN = 0
+
+	# See https://en.wikipedia.org/wiki/ANSI_escape_code#3/4_bit
+	for (i = 31; i <= 36; i++)
+		COLORS[COLORS_LEN++] = i
+	for (i = 91; i <= 96; i++)
+		COLORS[COLORS_LEN++] = i
+}
+
+function colorcode(word) {
+	c = 0
+
+	split(word, chars, "")
+	for (i = 1; i <= length(word); i++)
+		c += index(ascii, chars[i])
+
+	return COLORS[c % COLORS_LEN]
+}
+
+/^[0-9]+ \(.+\) .+$/ {
+	lbracket = index($0, "(")
+	rbracket = index($0, ")")
+
+	nick = substr($0, lbracket + 1, rbracket - lbracket - 1)
+	sub(nick, sprintf("\033[%dm%s\033[0m", colorcode(nick), nick))
+}
+
+{
+	print
+}

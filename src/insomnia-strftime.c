@@ -31,7 +31,7 @@ main(void)
 	line = NULL;
 
 	while ((read = getline(&line, &len, stdin)) != -1) {
-		if (!(sep= strchr(line, DELIM))) {
+		if (!(sep = strchr(line, DELIM))) {
 			warnx("invalid input line '%s'", line);
 			printf("%s", line);
 			continue;

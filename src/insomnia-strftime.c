@@ -7,13 +7,9 @@
 
 #include <sys/types.h>
 
-/* TODO: How do we handle day changes?
- *
- * With the current format day changes are not recorded at all in the
- * log. Prefixing every line with the current day seems to be too
- * verbose and decreases readiblity. irssi solves this by printing a
- * single line when the date changed, maybe we should also do this.
- */
+static int prevday = -1;
+
+#define NXFMT "%d %b %Y"
 #define TMFMT "%H:%M:%S"
 
 enum {
@@ -50,10 +46,18 @@ main(void)
 			goto cont;
 		}
 
+		if (prevday != -1 && prevday != tm->tm_yday) {
+			if (strftime(tbuf, sizeof(tbuf), NXFMT, tm))
+				printf("Day changed to %s\n", tbuf);
+			else
+				warnx("strftime failed for NXFMT");
+		}
+
+		prevday = tm->tm_yday;
 		if (strftime(tbuf, sizeof(tbuf), TMFMT, tm))
 			tptr = tbuf;
 		else
-			warnx("strftime failed");
+			warnx("strftime failed for TMFMT");
 
 cont:
 		/* getline(3) should guarantee that there always is at

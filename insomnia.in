@@ -47,9 +47,7 @@ tmux split-window -t "=${session}:^" \
 tmux rename-window -t "=${session}" \
 	"$(insomnia-topic)"
 
-# The following allows us to actually reach the minium height of 2 rows,
-# without the following lines the minimum height is 3. This might be a
-# bug in tmux...
+# This is a workaround for https://github.com/tmux/tmux/issues/1480
 tmux set-option -t "=${session}" main-pane-height 1000000
 tmux set-hook -t "=${session}" client-attached \
 	"select-layout -t "=${session}." main-horizontal"

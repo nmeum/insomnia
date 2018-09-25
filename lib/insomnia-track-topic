@@ -5,7 +5,9 @@ BEGIN {
 }
 
 /^[0-9]+ \[.+\] \*\*\* .+ has set the topic to: .*$/ {
-	system("tmux rename-window " "'" $2 "'")
+	command = "xargs -I '{}' tmux rename-window '{}'"
+	printf("%s\n", $2) | command
+	close(command)
 }
 
 {

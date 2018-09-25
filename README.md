@@ -14,7 +14,7 @@ insomnia depends on the following non-standard utilities:
 
 * [hii][hii github]
 * [input][input github]
-* [tmux][tmux hompepage]
+* [tmux][tmux hompepage] >= [2.9][tmux pr 1487]
 
 ## Usage
 
@@ -48,3 +48,4 @@ with this program. If not, see <http://www.gnu.org/licenses/>.
 [hii github]: https://github.com/nmeum/hii
 [input github]: https://github.com/nmeum/input
 [tmux homepage]: https://tmux.github.io
+[tmux pr 1487]: https://github.com/tmux/tmux/pull/1487

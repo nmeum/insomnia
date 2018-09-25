@@ -41,15 +41,10 @@ tmux new-session -d -s "${session}" \
 tmux set-hook -t "=${session}" client-detached \
 	"kill-session -t '=${session}'"
 tmux set-hook -t "=${session}" client-resized \
-	"resize-pane -t '=insomnia.bottom' -y 2"
-tmux split-window -t "=${session}:^" \
+	"resize-pane -t '=insomnia.bottom' -y 1"
+tmux split-window -t "=${session}:^" -l 1 \
 	"env ${vars} insomnia-input"
 tmux rename-window -t "=${session}" \
 	"$(insomnia-topic)"
-
-# This is a workaround for https://github.com/tmux/tmux/issues/1480
-tmux set-option -t "=${session}" main-pane-height 1000000
-tmux set-hook -t "=${session}" client-attached \
-	"select-layout -t "=${session}." main-horizontal"
 
 exec tmux attach -t "${session}"

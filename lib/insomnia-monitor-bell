@@ -1,0 +1,22 @@
+#!/usr/bin/awk -f
+
+BEGIN {
+	idfp = ENVIRON["INSOMNIA_DIR"] "/id"
+	getline name < idfp
+	close(name)
+}
+
+/^[0-9]* \[.+\] \(.+\) .+$/ && name != "" {
+	lbracket = index($0, "[")
+	rbracket = index($0, "]")
+
+	channel = substr($0, lbracket + 1, rbracket - lbracket - 1)
+	if (channel == name) {
+		print
+		next
+	}
+}
+
+{
+	printf("%s\a\n", $0)
+}

@@ -1,0 +1,10 @@
+#!/bin/sh
+
+# TODO: Support for multiple input files in tail(1) is not mandated by
+# POSIX. Strictly speaking this script is thus not POSIX compatible,
+# however, OpenBSD, busybox and GNU tail support multiple files.
+# Therefore I consider this good enough for now.
+find "${INSOMNIA_DIR}/.." -maxdepth 2 -type f -a -name log \
+	-exec tail -f \{\} \+ | \
+	insomnia-monitor-bell | \
+	insomnia-strftime

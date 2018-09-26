@@ -12,7 +12,7 @@ full of bugs.
 
 insomnia depends on the following non-standard utilities:
 
-* [hii][hii github]
+* [hii][hii github] >= 0.2.0
 * [input][input github]
 * [tmux][tmux hompepage] >= [2.9][tmux pr 1487]
 

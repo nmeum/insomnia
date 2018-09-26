@@ -7,5 +7,5 @@
 # Unfourtunatly, POSIX currently doesn't specify a command line utility
 # for reversing an input stream. Therefore we are forced to use sort(1).
 #
-# This will change though: http://austingroupbugs.net/view.php
+# This will change though: http://austingroupbugs.net/view.php?id=877
 exec sort -k1 -r "${INSOMNIA_DIR}/out"

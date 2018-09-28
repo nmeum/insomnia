@@ -1,4 +1,5 @@
 #include <err.h>
+#include <libgen.h>
 #include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -7,6 +8,10 @@
 #include <sys/types.h>
 
 #define TAILCMD "tail -f "
+#define HDRFMT "\n==> %s <==\n\n"
+
+static int firstrun = 1;
+static pthread_t lastthr;
 static pthread_mutex_t mtx = PTHREAD_MUTEX_INITIALIZER;
 
 static char*
@@ -34,7 +39,8 @@ tail(void *arg)
 	FILE *pipe;
 	size_t llen;
 	ssize_t read;
-	char *fp, *cmd, *line;
+	pthread_t thr;
+	char *fp, *fmt, *cmd, *line, *name;
 
 	fp = arg;
 	cmd = tailcmd(fp);
@@ -44,9 +50,21 @@ tail(void *arg)
 	line = NULL;
 	llen = 0;
 
+	name = basename(dirname(fp));
 	while ((read = getline(&line, &llen, pipe)) != -1) {
 		if (pthread_mutex_lock(&mtx))
 			err(EXIT_FAILURE, "pthread_mutex_lock failed");
+
+		fmt = HDRFMT;
+		if (firstrun) {
+			fmt += 1; /* skip newline */
+			firstrun = 0;
+		}
+
+		thr = pthread_self();
+		if (firstrun || !pthread_equal(thr, lastthr))
+			printf(fmt, name);
+		lastthr = thr;
 
 		printf("%s", line);
 		fflush(stdout);

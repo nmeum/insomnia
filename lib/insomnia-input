@@ -10,8 +10,7 @@ fi
 nickfp="${INSOMNIA_DIR}/usr"
 [ -S "${nickfp}" ] || unset -v nickfp
 
-name="${INSOMNIA_DIR##*/}"
-
+name="$(insomnia-name)"
 input ${nickfp:+-c "insomnia-unix '${nickfp}'"} \
 		-p "[${name:-(status)}] " \
 		| while read -r line; do

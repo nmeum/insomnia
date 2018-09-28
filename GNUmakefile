@@ -3,7 +3,7 @@ LIBDIR ?= $(PWD)/lib
 CFLAGS ?= -Werror -Os
 CFLAGS += -std=c99 -Wpedantic -Wall -Wextra
 
-all: insomnia lib/insomnia-strftime lib/insomnia-unix
+all: insomnia lib/insomnia-strftime lib/insomnia-unix lib/insomnia-tail
 
 insomnia: insomnia.in
 	sed 's|@LIBDIR@|$(LIBDIR)|' < $< > $@
@@ -14,3 +14,6 @@ lib/insomnia-strftime: src/insomnia-strftime.c
 
 lib/insomnia-unix: src/insomnia-unix.c
 	$(CC) -o $@ $< $(CFLAGS) $(LDFLAGS)
+
+lib/insomnia-tail: src/insomnia-tail.c
+	$(CC) -o $@ $< $(CFLAGS) -D_POSIX_SOURCE -pthread $(LDFLAGS)

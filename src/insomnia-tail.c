@@ -36,6 +36,7 @@ tailcmd(char *fp)
 static void*
 tail(void *arg)
 {
+	int ret;
 	FILE *pipe;
 	size_t llen;
 	ssize_t read;
@@ -74,8 +75,10 @@ tail(void *arg)
 	}
 
 	free(cmd);
-	if (pclose(pipe) == -1)
+	if ((ret = pclose(pipe)) == -1)
 		errx(EXIT_FAILURE, "pclose failed");
+	else if (ret != EXIT_SUCCESS)
+		exit(ret);
 
 	return NULL;
 }

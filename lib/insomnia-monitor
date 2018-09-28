@@ -1,6 +1,6 @@
 #!/bin/sh
 
-find "${INSOMNIA_DIR}/.." -maxdepth 2 -type f -a -name log \
+find "${INSOMNIA_BASE}" -maxdepth 2 -type f -a -name log \
 	-exec insomnia-tail -f \{\} \+ | \
 	insomnia-monitor-bell | \
 	insomnia-strftime

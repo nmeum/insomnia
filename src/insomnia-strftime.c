@@ -32,7 +32,6 @@ main(void)
 
 	while ((read = getline(&line, &len, stdin)) != -1) {
 		if (!(sep = strchr(line, DELIM))) {
-			warnx("invalid input line '%s'", line);
 			printf("%s", line);
 			continue;
 		}
@@ -41,10 +40,8 @@ main(void)
 		tptr = line;
 
 		if (!(epoch = strtoull(line, NULL, 10)) ||
-				!(tm = localtime((time_t*)&epoch))) {
-			warn("couldn't parse epoch '%s'", line);
+				!(tm = localtime((time_t*)&epoch)))
 			goto cont;
-		}
 
 		if (prevday != -1 && prevday != tm->tm_yday) {
 			if (strftime(tbuf, sizeof(tbuf), NXFMT, tm))

@@ -6,12 +6,27 @@ BEGIN {
 	close(name)
 }
 
-/^[0-9]* \[.+\] \(.+\) .+$/ && name != "" {
-	lbracket = index($0, "[")
-	rbracket = index($0, "]")
+function inbrackets(string, opening, closing) {
+	lbracket = index(string, opening)
+	rbracket = index(string, closing)
 
-	channel = substr($0, lbracket + 1, rbracket - lbracket - 1)
-	if (channel == name) {
+	return substr(string, lbracket + 1, rbracket - lbracket - 1)
+}
+
+function ischan(channel) {
+	# This is a stripped down variant of IsValidChannel from girc
+	# which only checks the first character to determine channels.
+
+	first = substr(channel, 1, 1)
+	return index("!#&*~+", first)
+}
+
+/^[0-9]* \[.+\] \(.+\) .+$/ && name != "" {
+	source = inbrackets($0, "[", "]")
+	if (!ischan(source))
+		source = inbrackets($0, "(", ")")
+
+	if (source == name) {
 		print
 		next
 	}

@@ -1,9 +1,11 @@
 #!/bin/sh
 
 if insomnia-ischan; then
-	# TODO: Terminate if there is no topic for the channel
-	insomnia-rev | awk -vFS=": " \
-		'/^[0-9]+ \[\*\] topic for .+ is: .+$/ { print($2); exit }'
+	insomnia-rev | sed -n '
+/^[0-9][0-9]* \[.*\] topic for ..* is: ..*/ {
+	s/^[0-9][0-9]* \[.*\] topic for ..* is: \(.*\)/\1/p
+	q
+}'
 else
 	name="$(insomnia-name)"
 	echo "[(insomnia)]${name:+ $name}"

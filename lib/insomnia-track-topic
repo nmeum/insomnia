@@ -1,12 +1,13 @@
 #!/usr/bin/awk -f
 
-BEGIN {
-	FS = ": "
-}
-
-/^[0-9]+ \[.+\] \*\*\* .+ has set the topic to: .*$/ {
+/^[0-9]+ \[.+\] \*\*\* .+ has set the topic to: .+$/ {
 	command = "xargs -I '{}' tmux rename-window '{}'"
-	printf("%s\n", $2) | command
+
+	text = $10
+	for (i = 11; i < NF; i++)
+		text = text " " $i
+
+	printf("%s\n", text) | command
 	close(command)
 }
 

@@ -10,46 +10,29 @@
 
 static int prevday = -1;
 
-#define NXFMT "%d %b %Y"
+#define INSTR stdin
 #define CUFMT "%H:%M:%S"
+#define NXFMT "%d %b %Y"
 
 enum {
 	DELIM = ' ',
 	MAXTM = 256,
 };
 
-int
-main(int argc, char **argv)
+static void
+inloop(char *cfmt, char *nfmt)
 {
 	unsigned long long epoch;
-	char *line, *sep, *tptr, *cfmt, *nfmt;
-	struct tm *tm;
-	size_t len;
-	ssize_t read;
+	char *line, *sep, *tptr;
 	char tbuf[MAXTM];
-	int opt;
-
-	nfmt = cfmt = NULL;
-	while ((opt = getopt(argc, argv, "n:c:")) != -1) {
-		switch (opt) {
-		case 'n':
-			nfmt = optarg;
-			break;
-		case 'c':
-			cfmt = optarg;
-			break;
-		}
-	}
-
-	if (!nfmt)
-		nfmt = NXFMT;
-	if (!cfmt)
-		cfmt = CUFMT;
+	struct tm *tm;
+	ssize_t read;
+	size_t len;
 
 	len = 0;
 	line = NULL;
 
-	while ((read = getline(&line, &len, stdin)) != -1) {
+	while ((read = getline(&line, &len, INSTR)) != -1) {
 		if (!(sep = strchr(line, DELIM))) {
 			printf("%s", line);
 			continue;
@@ -84,7 +67,33 @@ cont:
 		 * always point to a valid memory location. */
 		printf("%s %s", tptr, ++sep);
 	}
-	if (ferror(stdin))
+}
+
+int
+main(int argc, char **argv)
+{
+	char *cfmt, *nfmt;
+	int opt;
+
+	nfmt = cfmt = NULL;
+	while ((opt = getopt(argc, argv, "n:c:")) != -1) {
+		switch (opt) {
+		case 'n':
+			nfmt = optarg;
+			break;
+		case 'c':
+			cfmt = optarg;
+			break;
+		}
+	}
+
+	if (!cfmt)
+		cfmt = CUFMT;
+	if (!nfmt)
+		nfmt = NXFMT;
+
+	inloop(cfmt, nfmt);
+	if (ferror(INSTR))
 		errx(EXIT_FAILURE, "ferror failed");
 
 	return EXIT_SUCCESS;

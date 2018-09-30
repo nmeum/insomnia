@@ -11,7 +11,7 @@
 static int prevday = -1;
 
 #define INSTR stdin
-#define CUFMT "%H:%M:%S"
+#define CUFMT "%X"
 #define NXFMT "%d %b %Y"
 
 enum {

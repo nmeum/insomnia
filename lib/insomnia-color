@@ -33,4 +33,5 @@ function colorcode(word) {
 
 {
 	print
+	fflush()
 }

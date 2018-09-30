@@ -15,6 +15,7 @@ insomnia depends on the following non-standard utilities:
 * [hii][hii github] >= 0.2.0
 * [input][input github]
 * [tmux][tmux hompepage] >= [2.9][tmux pr 1487]
+* awk with `fflush()` (not in [POSIX.1‐2008][posix issue 634])
 
 ## Usage
 
@@ -49,3 +50,4 @@ with this program. If not, see <http://www.gnu.org/licenses/>.
 [input github]: https://github.com/nmeum/input
 [tmux homepage]: https://tmux.github.io
 [tmux pr 1487]: https://github.com/tmux/tmux/pull/1487
+[posix issue 634]: http://austingroupbugs.net/view.php?id=634

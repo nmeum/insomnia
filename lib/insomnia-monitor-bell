@@ -28,10 +28,12 @@ function ischan(channel) {
 
 	if (source == name) {
 		print
+		fflush()
 		next
 	}
 }
 
 {
 	printf("%s\a\n", $0)
+	fflush()
 }

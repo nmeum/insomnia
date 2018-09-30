@@ -4,13 +4,14 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <unistd.h>
 
 #include <sys/types.h>
 
 static int prevday = -1;
 
 #define NXFMT "%d %b %Y"
-#define TMFMT "%H:%M:%S"
+#define CUFMT "%H:%M:%S"
 
 enum {
 	DELIM = ' ',
@@ -18,14 +19,32 @@ enum {
 };
 
 int
-main(void)
+main(int argc, char **argv)
 {
 	unsigned long long epoch;
-	char *line, *sep, *tptr;
+	char *line, *sep, *tptr, *cfmt, *nfmt;
 	struct tm *tm;
 	size_t len;
 	ssize_t read;
 	char tbuf[MAXTM];
+	int opt;
+
+	nfmt = cfmt = NULL;
+	while ((opt = getopt(argc, argv, "n:c:")) != -1) {
+		switch (opt) {
+		case 'n':
+			nfmt = optarg;
+			break;
+		case 'c':
+			cfmt = optarg;
+			break;
+		}
+	}
+
+	if (!nfmt)
+		nfmt = NXFMT;
+	if (!cfmt)
+		cfmt = CUFMT;
 
 	len = 0;
 	line = NULL;
@@ -44,17 +63,20 @@ main(void)
 			goto cont;
 
 		if (prevday != -1 && prevday != tm->tm_yday) {
-			if (strftime(tbuf, sizeof(tbuf), NXFMT, tm))
+			if (strftime(tbuf, sizeof(tbuf), nfmt, tm))
 				printf("Day changed to %s\n", tbuf);
 			else
-				warnx("strftime failed for NXFMT");
+				warnx("strftime failed for '%s'", nfmt);
 		}
 
-		prevday = tm->tm_yday;
-		if (strftime(tbuf, sizeof(tbuf), TMFMT, tm))
-			tptr = tbuf;
-		else
-			warnx("strftime failed for TMFMT");
+		if (*nfmt != '\0')
+			prevday = tm->tm_yday;
+		if (*cfmt != '\0') {
+			if (strftime(tbuf, sizeof(tbuf), cfmt, tm))
+				tptr = tbuf;
+			else
+				warnx("strftime failed for '%s'", cfmt);
+		}
 
 cont:
 		/* getline(3) should guarantee that there always is at

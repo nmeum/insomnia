@@ -41,12 +41,18 @@ tmux set-hook -t "=${session}" client-detached \
 tmux set-hook -t "=${session}" client-resized \
 	"resize-pane -t '=insomnia.bottom' -y 1"
 
-tmux new-window -a -t "=${session}" \
-	-n "$(insomnia-topic)" \
+tmux new-window -a -t "=${session}" -n "chat" \
 	"env ${vars} insomnia-output"
 tmux split-window -t "=${session}:$" -l 1 \
 	"env ${vars} insomnia-input"
-tmux rename-window -t "=${session}:$" \
-	"$(insomnia-topic)"
+
+tmux set-window-option -t "=${session}:$" \
+	pane-border-status top
+tmux set-window-option -t "=${session}:$" \
+	pane-border-format "#T"
+tmux select-pane -t "=${session}:.1" \
+	-T "$(insomnia-topic)"
+tmux select-pane -t "=${session}:.2" \
+	-T ""
 
 exec tmux attach -t "${session}"

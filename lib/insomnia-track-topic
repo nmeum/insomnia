@@ -1,7 +1,7 @@
 #!/usr/bin/awk -f
 
 /^[0-9]+ \[.+\] \*\*\* .+ has set the topic to: .+$/ {
-	command = "xargs -I '{}' tmux rename-window '{}'"
+	command = "xargs -I '{}' tmux select-pane -t :.1 -T '{}'"
 
 	text = $10
 	for (i = 11; i < NF; i++)

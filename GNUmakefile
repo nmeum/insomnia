@@ -10,10 +10,10 @@ insomnia: insomnia.in
 	chmod +x $@
 
 lib/insomnia-strftime: src/insomnia-strftime.c
-	$(CC) -o $@ $< $(CFLAGS) -D_XOPEN_SOURCE $(LDFLAGS)
+	$(CC) -o $@ $< $(CFLAGS) -D_POSIX_C_SOURCE=200809L $(LDFLAGS)
 
 lib/insomnia-unix: src/insomnia-unix.c
 	$(CC) -o $@ $< $(CFLAGS) $(LDFLAGS)
 
 lib/insomnia-tail: src/insomnia-tail.c
-	$(CC) -o $@ $< $(CFLAGS) -D_POSIX_SOURCE -pthread $(LDFLAGS)
+	$(CC) -o $@ $< $(CFLAGS) -D_POSIX_C_SOURCE=200809L -pthread $(LDFLAGS)

@@ -4,7 +4,7 @@
 	command = "xargs -I '{}' tmux select-pane -t :.1 -T '{}'"
 
 	text = $10
-	for (i = 11; i < NF; i++)
+	for (i = 11; i <= NF; i++)
 		text = text " " $i
 
 	printf("%s\n", text) | command

@@ -44,6 +44,7 @@ tail(void *arg)
 	char *fp, *fmt, *cmd, *line, *name;
 
 	fp = arg;
+	printf("Starting tail for %s\n", fp);
 	cmd = tailcmd(fp);
 	if (!(pipe = popen(cmd, "r")))
 		err(EXIT_FAILURE, "popen failed");
@@ -57,10 +58,8 @@ tail(void *arg)
 			err(EXIT_FAILURE, "pthread_mutex_lock failed");
 
 		fmt = HDRFMT;
-		if (firstrun) {
+		if (firstrun)
 			fmt += 1; /* skip newline */
-			firstrun = 0;
-		}
 
 		thr = pthread_self();
 		if (firstrun || !pthread_equal(thr, lastthr))
@@ -70,6 +69,7 @@ tail(void *arg)
 		printf("%s", line);
 		fflush(stdout);
 
+		firstrun = 0;
 		if (pthread_mutex_unlock(&mtx))
 			err(EXIT_FAILURE, "pthread_mutex_unlock failed");
 	}

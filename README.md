@@ -17,6 +17,11 @@ insomnia depends on the following non-standard utilities:
 * [tmux][tmux hompepage] >= [2.9][tmux pr 1487]
 * awk with `fflush()` (not in [POSIX.1‐2008][posix issue 634])
 
+Additionally, the following software is required for compilation:
+
+* A C99 compiler
+* [GNU make][GNU make] (sorry!)
+
 ## Installation
 
 To build and install insomnia run the following commands:
@@ -64,3 +69,4 @@ with this program. If not, see <http://www.gnu.org/licenses/>.
 [tmux homepage]: https://tmux.github.io
 [tmux pr 1487]: https://github.com/tmux/tmux/pull/1487
 [posix issue 634]: http://austingroupbugs.net/view.php?id=634
+[GNU make]: https://www.gnu.org/software/make/

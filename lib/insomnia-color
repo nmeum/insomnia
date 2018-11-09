@@ -28,7 +28,7 @@ function colorcode(word) {
 	rbracket = index($0, ")")
 
 	nick = substr($0, lbracket + 1, rbracket - lbracket - 1)
-	sub(nick, sprintf("\033[%dm%s\033[0m", colorcode(nick), nick))
+	sub(/\(.+\)/, sprintf("(\033[%dm%s\033[0m)", colorcode(nick), nick))
 }
 
 {

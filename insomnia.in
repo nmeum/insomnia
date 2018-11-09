@@ -11,7 +11,7 @@ export INSOMNIA_BASE="${INSOMNIA_BASE:-$HOME/irc}"
 export INSOMNIA_DIR="${INSOMNIA_BASE}/${1}/${2}"
 
 # tmux doesn't copy environment variables, pass them explicitly.
-vars="INSOMNIA_BASE="${INSOMNIA_BASE}" INSOMNIA_DIR="${INSOMNIA_DIR}" PATH="${PATH}:@LIBDIR@""
+vars="INSOMNIA_BASE='${INSOMNIA_BASE}' INSOMNIA_DIR='${INSOMNIA_DIR}' PATH='${PATH}:@LIBDIR@'"
 
 if [ ! -d "${INSOMNIA_DIR}" ]; then
 	echo "'${INSOMNIA_DIR}' is not a directory or doesn't exist" 1>&2

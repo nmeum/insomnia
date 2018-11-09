@@ -4,56 +4,29 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 
+#include <sys/wait.h>
 #include <sys/types.h>
 
-#define TAILCMD "tail -f "
 #define HDRFMT "\n==> %s <==\n\n"
 
 static int firstrun = 1;
 static pthread_t lastthr;
 static pthread_mutex_t mtx = PTHREAD_MUTEX_INITIALIZER;
 
-static char*
-tailcmd(char *fp)
+static void
+readlines(char *name, FILE *stream)
 {
-	char *c, *cmd;
-	size_t tlen, flen;
-
-	tlen = strlen(TAILCMD);
-	flen = strlen(fp);
-
-	if (!(cmd = malloc(tlen + flen + 1)))
-		err(EXIT_FAILURE, "malloc failed");
-
-	c = stpncpy(cmd, TAILCMD, tlen);
-	c = stpncpy(c, fp, flen);
-	*c = '\0';
-
-	return cmd;
-}
-
-static void*
-tail(void *arg)
-{
-	int ret;
-	FILE *pipe;
 	size_t llen;
 	ssize_t read;
 	pthread_t thr;
-	char *fp, *fmt, *cmd, *line, *name;
-
-	fp = arg;
-	printf("Starting tail for %s\n", fp);
-	cmd = tailcmd(fp);
-	if (!(pipe = popen(cmd, "r")))
-		err(EXIT_FAILURE, "popen failed");
+	char *fmt, *line;
 
 	line = NULL;
 	llen = 0;
 
-	name = basename(dirname(fp));
-	while ((read = getline(&line, &llen, pipe)) != -1) {
+	while ((read = getline(&line, &llen, stream)) != -1) {
 		if (pthread_mutex_lock(&mtx))
 			err(EXIT_FAILURE, "pthread_mutex_lock failed");
 
@@ -73,12 +46,42 @@ tail(void *arg)
 		if (pthread_mutex_unlock(&mtx))
 			err(EXIT_FAILURE, "pthread_mutex_unlock failed");
 	}
+}
 
-	free(cmd);
-	if ((ret = pclose(pipe)) == -1)
-		errx(EXIT_FAILURE, "pclose failed");
-	else if (ret != EXIT_SUCCESS)
-		exit(ret);
+static void*
+tail(void *arg)
+{
+	pid_t pid;
+	FILE *stream;
+	int ret, p[2], wstatus;
+	char *fp;
+
+	fp = arg;
+	if (pipe(p))
+		err(EXIT_FAILURE, "pipe failed");
+
+	switch ((pid = fork())) {
+	case 0:
+		close(STDOUT_FILENO);
+		dup(p[1]);
+
+		execlp("tail", "tail", "-f", fp, (char*)NULL);
+		err(EXIT_FAILURE, "execlp failed");
+	case -1:
+		err(EXIT_FAILURE, "fork failed");
+	default:
+		if (!(stream = fdopen(p[0], "r")))
+		       err(EXIT_FAILURE, "fdopen failed");
+		readlines(basename(dirname(fp)), stream);
+
+		if (waitpid(pid, &wstatus, 0) == -1)
+			err(EXIT_FAILURE, "waitpid failed");
+		else if ((ret = WIFEXITED(wstatus)))
+			exit(ret);
+
+		if (close(p[0]) || close(p[1]))
+			err(EXIT_FAILURE, "close failed");
+	}
 
 	return NULL;
 }

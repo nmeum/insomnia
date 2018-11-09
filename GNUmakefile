@@ -27,4 +27,7 @@ install: $(TARGETS) README.md
 	install -Dm755 $(wildcard ./lib/*) "$(DESTDIR)$(LIBDIR)"
 	install -Dm644 README.md "$(DESTDIR)$(DOCDIR)/README.md"
 
-.PHONY: all install
+clean:
+	rm -f $(TARGETS)
+
+.PHONY: all install clean

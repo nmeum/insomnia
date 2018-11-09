@@ -17,15 +17,28 @@ insomnia depends on the following non-standard utilities:
 * [tmux][tmux hompepage] >= [2.9][tmux pr 1487]
 * awk with `fflush()` (not in [POSIX.1‐2008][posix issue 634])
 
-## Usage
+## Installation
 
-hii needs to be built by invoking the following command:
+To build and install insomnia run the following commands:
 
 	$ make
+	$ make install
 
-Afterwards the generated `insomnia` script can be invoked as follows:
+Consult the `GNUmakefile` for environment variables which can be used to
+configure the installation. The variable `LIBDIR` is special and needs
+to be set for both targets `make` and `make install`.
 
-	$ ./insomnia irc.hackint.eu '#hii'
+In case you don't want to install insomnia globally but just want to
+experiment with it compile insomnia using the following commands:
+
+	$ export LIBDIR="$(pwd)/lib"
+	$ make
+
+## Usage
+
+After a successful installation `insomnia` can be invoked as follows:
+
+	$ insomnia irc.hackint.eu '#hii'
 
 This will only work if an `hii` instance for `irc.hackint.eu` is already
 running in the background and if the user already joined the `#hii`

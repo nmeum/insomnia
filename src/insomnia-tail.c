@@ -1,5 +1,4 @@
 #include <err.h>
-#include <libgen.h>
 #include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -72,7 +71,7 @@ tail(void *arg)
 	default:
 		if (!(stream = fdopen(p[0], "r")))
 		       err(EXIT_FAILURE, "fdopen failed");
-		readlines(basename(dirname(fp)), stream);
+		readlines(fp, stream);
 
 		if (waitpid(pid, &wstatus, 0) == -1)
 			err(EXIT_FAILURE, "waitpid failed");

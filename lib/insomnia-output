@@ -7,7 +7,7 @@ if [ ! -f "${outfp}" ]; then
 	exit 1
 fi
 
-tail -f "${outfp}" | \
+tail -n 128 -f "${outfp}" | \
 	insomnia-track-topic | \
 	insomnia-color | \
 	insomnia-strftime

@@ -28,7 +28,11 @@ function colorcode(word) {
 	rbracket = index($0, ")")
 
 	nick = substr($0, lbracket + 1, rbracket - lbracket - 1)
-	sub(/\(.+\)/, sprintf("(\033[%dm%s\033[0m)", colorcode(nick), nick))
+
+	text = $1 " " sprintf("(\033[%dm%s\033[0m)", colorcode(nick), nick)
+	for (i = 3; i <= NF; i++)
+		text = text " " $i
+	$0 = text
 }
 
 {

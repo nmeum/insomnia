@@ -4,6 +4,10 @@ BEGIN {
 	idfp = ENVIRON["INSOMNIA_DIR"] "/id"
 	getline name < idfp
 	close(name)
+
+	# Initialize PRNG with epoch and store it
+	srand()
+	startup = srand()
 }
 
 function inbrackets(string, opening, closing) {
@@ -26,14 +30,14 @@ function ischan(channel) {
 	if (!ischan(source))
 		source = inbrackets($0, "(", ")")
 
-	if (source == name) {
-		print
+	if (source != name && $1 > startup) {
+		printf("%s\a\n", $0)
 		fflush()
 		next
 	}
 }
 
 {
-	printf("%s\a\n", $0)
+	print
 	fflush()
 }

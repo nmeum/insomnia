@@ -13,7 +13,7 @@ full of bugs.
 insomnia depends on the following non-standard utilities:
 
 * [hii][hii github] >= 0.2.0
-* [input][input github]
+* [input][input github] >= 0.6.0
 * [tmux][tmux hompepage] >= [2.9][tmux pr 1487]
 * awk with `fflush()` (not in [POSIX.1‐2008][posix issue 634])
 

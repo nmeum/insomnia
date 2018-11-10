@@ -10,8 +10,12 @@ fi
 nickfp="${INSOMNIA_DIR}/usr"
 [ -S "${nickfp}" ] || unset -v nickfp
 
+histdir="${XDG_DATA_HOME:-$HOME/.local/share}/insomnia"
+mkdir -p "${histdir}"
+
 name="$(insomnia-name)"
 input ${nickfp:+-c "insomnia-unix '${nickfp}'"} \
+		-h "${histdir}/input-history" \
 		-p "[${name:-(status)}] " \
 		| while read -r line; do
 	# TODO: Implement shortcut commmands, e.g. `/j <CHAN>`.

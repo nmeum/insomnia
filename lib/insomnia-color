@@ -11,21 +11,22 @@ BEGIN {
 		colors[colors_len++] = i
 }
 
-function colorcode(word) {
-	split(word, chars, "")
+function nickcolor(nick) {
+	split(nick, chars, "")
 
-	c = 0;
-	for (i = 1; i <= length(word); i++)
+	c = 0
+	for (i = 1; i <= length(nick); i++)
 		c += index(ascii, chars[i])
 
-	return colors[c % colors_len]
+	color = colors[c % colors_len]
+	return sprintf("\033[%dm%s\033[0m", color, nick)
 }
 
 /^[0-9]+ \(.+\) .+$/ {
 	# Strip enclosing parentheses from nick
 	nick = substr($2, 2, length($2) - 2)
 
-	text = $1 " " sprintf("(\033[%dm%s\033[0m)", colorcode(nick), nick)
+	text = $1 " " sprintf("(%s)", nickcolor(nick))
 	for (i = 3; i <= NF; i++)
 		text = text " " $i
 	$0 = text

@@ -10,13 +10,6 @@ BEGIN {
 	startup = srand()
 }
 
-function inbrackets(string, opening, closing) {
-	lbracket = index(string, opening)
-	rbracket = index(string, closing)
-
-	return substr(string, lbracket + 1, rbracket - lbracket - 1)
-}
-
 function ischan(channel) {
 	# This is a stripped down variant of IsValidChannel from girc
 	# which only checks the first character to determine channels.
@@ -26,9 +19,9 @@ function ischan(channel) {
 }
 
 /^[0-9]* \[.+\] \(.+\) .+$/ && name != "" {
-	source = inbrackets($0, "[", "]")
+	source = substr($2, 2, length($2) - 2)
 	if (!ischan(source))
-		source = inbrackets($0, "(", ")")
+		source = substr($3, 2, length($3) - 2)
 
 	if (source != name && $1 > startup) {
 		printf("%s\a\n", $0)

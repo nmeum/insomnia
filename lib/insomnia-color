@@ -24,10 +24,8 @@ function colorcode(word) {
 }
 
 /^[0-9]+ \(.+\) .+$/ {
-	lbracket = index($0, "(")
-	rbracket = index($0, ")")
-
-	nick = substr($0, lbracket + 1, rbracket - lbracket - 1)
+	# Strip enclosing parentheses from nick
+	nick = substr($2, 2, length($2) - 2)
 
 	text = $1 " " sprintf("(\033[%dm%s\033[0m)", colorcode(nick), nick)
 	for (i = 3; i <= NF; i++)

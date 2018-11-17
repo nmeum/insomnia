@@ -1,7 +1,7 @@
 #!/usr/bin/awk -f
 
 BEGIN {
-	for (i = 1; i < 128; i++)
+	for (i = 1; i < 127; i++)
 		ascii = sprintf("%s%c", ascii, i)
 
 	# See https://en.wikipedia.org/wiki/ANSI_escape_code#3/4_bit

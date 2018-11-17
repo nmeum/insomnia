@@ -4,13 +4,12 @@ BEGIN {
 	for (i = 1; i < 128; i++)
 		ascii = sprintf("%s%c", ascii, i)
 
-	COLORS_LEN = 0
-
 	# See https://en.wikipedia.org/wiki/ANSI_escape_code#3/4_bit
+	colors_len = 0
 	for (i = 31; i <= 36; i++)
-		COLORS[COLORS_LEN++] = i
+		colors[colors_len++] = i
 	for (i = 91; i <= 96; i++)
-		COLORS[COLORS_LEN++] = i
+		colors[colors_len++] = i
 }
 
 function colorcode(word) {
@@ -20,7 +19,7 @@ function colorcode(word) {
 	for (i = 1; i <= length(word); i++)
 		c += index(ascii, chars[i])
 
-	return COLORS[c % COLORS_LEN]
+	return colors[c % colors_len]
 }
 
 /^[0-9]+ \(.+\) .+$/ {

@@ -7,6 +7,6 @@ if insomnia-ischan; then
 	q
 }'
 else
-	name="$(insomnia-name)"
+	name="$(cat "${INSOMNIA_DIR}/id" 2>/dev/null)"
 	echo "[(insomnia)]${name:+ $name}"
 fi

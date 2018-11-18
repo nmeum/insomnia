@@ -3,17 +3,20 @@
 BEGIN {
 	# See https://no-color.org/
 	nocolor = ENVIRON["NO_COLOR"]
+	if (nocolor == "")
+		colorsetup()
+}
 
-	if (nocolor == "") {
-		for (i = 1; i < 127; i++)
-			ascii = sprintf("%s%c", ascii, i)
+function colorsetup() {
+	# Generate ASCII lookup table
+	for (i = 1; i < 127; i++)
+		ascii = sprintf("%s%c", ascii, i)
 
-		# See https://en.wikipedia.org/wiki/ANSI_escape_code#3/4_bit
-		for (i = 31; i <= 36; i++)
-			colors[colors_len++] = i
-		for (i = 91; i <= 96; i++)
-			colors[colors_len++] = i
-	}
+	# See https://en.wikipedia.org/wiki/ANSI_escape_code#3/4_bit
+	for (i = 31; i <= 36; i++)
+		colors[colors_len++] = i
+	for (i = 91; i <= 96; i++)
+		colors[colors_len++] = i
 }
 
 function nickcolor(nick) {

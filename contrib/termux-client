@@ -1,0 +1,31 @@
+#!/bin/sh
+set -e
+
+# Host on which insomnia / hii are runnig.
+HOST="someuser@example.org"
+
+# Absolute path to the hii IRC directory on the host (no trailing slash).
+IDIR="/home/someuser/irc"
+
+sheet() {
+	tr '\n' ',' | xargs termux-dialog sheet -t "${0##*/}" -v | jq -r .text
+}
+
+channels() {
+	ssh "${HOST}" "sh -c 'find \"${IDIR}\" -maxdepth 3 -name in \
+		-a -type p | sed \"s|^${IDIR}/\(.*\)/in|\1|\"'"
+}
+
+target=$(channels | sheet)
+if [ -z "${target}" ]; then
+	termux-toast "No target selected, aborting."
+	exit 1
+elif [ "${target}" = "${target%%/*}" ]; then
+	server="${target}"
+	target=""
+else
+	server="${target%%/*}"
+	target="${target##*/}"
+fi
+
+exec mosh "${HOST}" -- insomnia "${server}" "${target}"

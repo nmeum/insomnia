@@ -1,14 +1,19 @@
 #!/usr/bin/awk -f
 
 BEGIN {
-	for (i = 1; i < 127; i++)
-		ascii = sprintf("%s%c", ascii, i)
+	# See https://no-color.org/
+	nocolor = ENVIRON["NO_COLOR"]
 
-	# See https://en.wikipedia.org/wiki/ANSI_escape_code#3/4_bit
-	for (i = 31; i <= 36; i++)
-		colors[colors_len++] = i
-	for (i = 91; i <= 96; i++)
-		colors[colors_len++] = i
+	if (nocolor == "") {
+		for (i = 1; i < 127; i++)
+			ascii = sprintf("%s%c", ascii, i)
+
+		# See https://en.wikipedia.org/wiki/ANSI_escape_code#3/4_bit
+		for (i = 31; i <= 36; i++)
+			colors[colors_len++] = i
+		for (i = 91; i <= 96; i++)
+			colors[colors_len++] = i
+	}
 }
 
 function nickcolor(nick) {
@@ -22,7 +27,7 @@ function nickcolor(nick) {
 	return sprintf("\033[%dm%s\033[0m", color, nick)
 }
 
-/^[0-9]+ \(.+\) .+$/ {
+/^[0-9]+ \(.+\) .+$/ && nocolor == "" {
 	# Strip enclosing parentheses from nick
 	nick = substr($2, 2, length($2) - 2)
 

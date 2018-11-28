@@ -13,7 +13,7 @@ nickfp="${INSOMNIA_DIR}/usr"
 histdir="${XDG_DATA_HOME:-$HOME/.local/share}/insomnia"
 mkdir -p "${histdir}"
 
-name="$(cat "${INSOMNIA_DIR}/id" 2>/dev/null)"
+name="$(insomnia-name)"
 input ${nickfp:+-c "insomnia-unix '${nickfp}'"} \
 		-h "${histdir}/input-history" \
 		-p "[${name:-(status)}] " \

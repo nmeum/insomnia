@@ -1,0 +1,6 @@
+#!/bin/sh
+
+if test -r "${INSOMNIA_DIR}/id"; then
+	read -r name < "${INSOMNIA_DIR}/id"
+	echo "${name}"
+fi

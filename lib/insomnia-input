@@ -19,5 +19,5 @@ input ${nickfp:+-c "insomnia-unix '${nickfp}'"} \
 		-p "[${name:-(status)}] " \
 		| while read -r line; do
 	# TODO: Implement shortcut commmands, e.g. `/j <CHAN>`.
-	printf "%s\n" "${line}" > "${infp}"
+	[ -p "${infp}" ] && printf "%s\n" "${line}" > "${infp}"
 done

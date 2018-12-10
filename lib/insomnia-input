@@ -14,7 +14,7 @@ histdir="${XDG_DATA_HOME:-$HOME/.local/share}/insomnia"
 mkdir -p "${histdir}"
 
 name="$(insomnia-name)"
-input ${nickfp:+-c "insomnia-unix '${nickfp}'"} \
+input -w ${nickfp:+-c "insomnia-unix '${nickfp}'"} \
 		-h "${histdir}/input-history" \
 		-p "[${name:-(status)}] " \
 		| while read -r line; do

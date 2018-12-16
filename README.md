@@ -4,9 +4,10 @@ A frontend for the [hii][hii github] IRC client.
 
 ## Status
 
-This is currently under development and I didn't replace my irssi-based
-setup with this yet, thus it doesn't have a single user and is likely
-full of bugs.
+insomnia is just a collection of small programs and scripts which are
+connected using tmux to create a simple irssi-like text-based user
+interface for hii. As you might expected it's pretty hacky but mostly
+works.
 
 ## Dependencies
 

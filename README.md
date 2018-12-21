@@ -15,7 +15,7 @@ insomnia depends on the following non-standard utilities:
 
 * [hii][hii github] >= 0.2.0
 * [input][input github] >= 0.7.0
-* [tmux][tmux hompepage] >= [2.9][tmux pr 1487]
+* [tmux][tmux homepage] >= [2.9][tmux pr 1487]
 * awk with `fflush()` (not in [POSIX.1‐2008][posix issue 634])
 
 Additionally, the following software is required for compilation:

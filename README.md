@@ -52,11 +52,11 @@ experiment with it compile insomnia using the following commands:
 
 After a successful installation `insomnia` can be invoked as follows:
 
-	$ insomnia irc.hackint.eu '#hii'
+	$ insomnia irc.hackint.org '#hii'
 
-This will only work if an `hii` instance for `irc.hackint.eu` is already
-running in the background and if the user already joined the `#hii`
-channel.
+This will only work if an `hii` instance for `irc.hackint.org` is
+already running in the background and if the user already joined the
+`#hii` channel.
 
 ## License
 

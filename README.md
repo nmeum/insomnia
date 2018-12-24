@@ -13,7 +13,7 @@ works.
 
 * Support for readline-like key bindings and tab completions for nicks.
 * Support for highlight "notification" through bell characters.
-	* Use this in combination with tmux's monitor-bell feature
+	* Use this in combination with tmux's monitor-bell feature.
 * Support for tracking topic changes through tmux pane titles.
 * (Optional) support for nick colors.
 

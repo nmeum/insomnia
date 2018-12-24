@@ -36,12 +36,13 @@ readlines(char *name, FILE *stream)
 		thr = pthread_self();
 		if (firstrun || !pthread_equal(thr, lastthr))
 			printf(fmt, name);
-		lastthr = thr;
 
 		printf("%s", line);
 		fflush(stdout);
 
+		lastthr = thr;
 		firstrun = 0;
+
 		if (pthread_mutex_unlock(&mtx))
 			err(EXIT_FAILURE, "pthread_mutex_unlock failed");
 	}

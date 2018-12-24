@@ -18,14 +18,13 @@ static void
 readlines(char *name, FILE *stream)
 {
 	size_t llen;
-	ssize_t read;
 	pthread_t thr;
 	char *fmt, *line;
 
 	line = NULL;
 	llen = 0;
 
-	while ((read = getline(&line, &llen, stream)) != -1) {
+	while (getline(&line, &llen, stream) != -1) {
 		if (pthread_mutex_lock(&mtx))
 			err(EXIT_FAILURE, "pthread_mutex_lock failed");
 

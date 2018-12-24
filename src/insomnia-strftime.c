@@ -26,13 +26,12 @@ inloop(char *cfmt, char *nfmt)
 	char *line, *sep, *tptr;
 	char tbuf[MAXTM];
 	struct tm *tm;
-	ssize_t read;
 	size_t len;
 
 	len = 0;
 	line = NULL;
 
-	while ((read = getline(&line, &len, INSTR)) != -1) {
+	while (getline(&line, &len, INSTR) != -1) {
 		if (!(sep = strchr(line, DELIM))) {
 			printf("%s", line);
 			continue;

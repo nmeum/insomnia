@@ -66,6 +66,10 @@ cont:
 		 * always point to a valid memory location. */
 		printf("%s %s", tptr, ++sep);
 	}
+
+	if (ferror(INSTR))
+		errx(EXIT_FAILURE, "ferror failed");
+	free(line);
 }
 
 int

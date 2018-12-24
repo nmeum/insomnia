@@ -45,6 +45,10 @@ readlines(char *name, FILE *stream)
 		if (pthread_mutex_unlock(&mtx))
 			err(EXIT_FAILURE, "pthread_mutex_unlock failed");
 	}
+
+	if (ferror(stream))
+		errx(EXIT_FAILURE, "ferror failed");
+	free(line);
 }
 
 static void*

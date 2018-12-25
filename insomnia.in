@@ -50,8 +50,6 @@ tmux set-window-option -t "=${session}:$" \
 	pane-border-status top
 tmux set-window-option -t "=${session}:$" \
 	pane-border-format "#T"
-tmux select-pane -t "=${session}:.1" \
-	-T "$(insomnia-topic)"
 tmux select-pane -t "=${session}:.2" \
 	-T ""
 

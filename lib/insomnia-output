@@ -7,6 +7,9 @@ if [ ! -f "${outfp}" ]; then
 	exit 1
 fi
 
+# Set tmux pane-title to topic
+printf '\033]2;%s\033\\' "$(insomnia-topic)"
+
 tail -n 128 -f "${outfp}" | \
 	insomnia-track-topic | \
 	insomnia-color | \

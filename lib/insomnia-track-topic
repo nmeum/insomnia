@@ -1,11 +1,11 @@
 #!/usr/bin/awk -f
 
 /^[0-9]+ \[.+\] \*\*\* .+ has set the topic to: .+$/ {
-	text = $10
+	topic = $10
 	for (i = 11; i <= NF; i++)
-		text = text " " $i
+		topic = topic " " $i
 
-	printf("\033]2;%s\033\\", text)
+	printf("\033]2;%s\033\\", topic)
 }
 
 {

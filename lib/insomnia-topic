@@ -6,7 +6,10 @@ if [ ! -S "${INSOMNIA_DIR}/usr" ]; then
 	exit
 fi
 
-insomnia-rev | sed -n '
+# Find the most recent topic change and exit. Since we don't want to
+# search through the entire backlog we reverse it first by sorting it
+# using the unix timestamp.
+sort -k1 -r "${INSOMNIA_DIR}/out" | sed -n '
 	/^[0-9][0-9]* \[.*\] topic for ..* is: ..*/ {
 		s/^[0-9][0-9]* \[.*\] topic for ..* is: \(.*\)/\1/p
 		q

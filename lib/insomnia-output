@@ -2,10 +2,7 @@
 set -e
 
 outfp="${INSOMNIA_DIR}/out"
-if [ ! -f "${outfp}" ]; then
-	echo "'${outfp}' isn't a regular file or does not exist" 1>&2
-	exit 1
-fi
+[ -e "${outfp}" ] || touch "${outfp}"
 
 # Set tmux pane-title to topic
 printf '\033]2;%s\033\\' "$(insomnia-topic)"

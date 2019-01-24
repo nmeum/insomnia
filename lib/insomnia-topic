@@ -1,12 +1,14 @@
 #!/bin/sh
 
-if insomnia-ischan; then
-	insomnia-rev | sed -n '
-/^[0-9][0-9]* \[.*\] topic for ..* is: ..*/ {
-	s/^[0-9][0-9]* \[.*\] topic for ..* is: \(.*\)/\1/p
-	q
-}'
-else
+if [ ! -S "${INSOMNIA_DIR}/usr" ]; then
 	name="$(cat "${INSOMNIA_DIR}/id" 2>/dev/null)"
 	echo "[(insomnia)]${name:+ $name}"
+	exit
 fi
+
+insomnia-rev | sed -n '
+	/^[0-9][0-9]* \[.*\] topic for ..* is: ..*/ {
+		s/^[0-9][0-9]* \[.*\] topic for ..* is: \(.*\)/\1/p
+		q
+	}
+'

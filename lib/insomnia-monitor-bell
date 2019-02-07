@@ -18,12 +18,12 @@ function ischan(channel) {
 	return index("!#&*~+", first)
 }
 
-/^[0-9]* \[.+\] \(.+\) .+$/ && name != "" {
+/^[0-9]* \[.+\] \(.+\) .+$/ {
 	source = substr($2, 2, length($2) - 2)
 	if (!ischan(source))
 		source = substr($3, 2, length($3) - 2)
 
-	if (source != name && $1 > startup) {
+	if ((source != name || name == "") && $1 > startup) {
 		printf("%s\a\n", $0)
 		fflush()
 		next

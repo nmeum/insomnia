@@ -1,12 +1,17 @@
 #!/bin/sh
 
-if insomnia-ischan; then
-	insomnia-rev | sed -n '
-/^[0-9][0-9]* \[.*\] topic for ..* is: ..*/ {
-	s/^[0-9][0-9]* \[.*\] topic for ..* is: \(.*\)/\1/p
-	q
-}'
-else
-	name="$(insomnia-name)"
+if [ ! -S "${INSOMNIA_DIR}/usr" ]; then
+	name="$(cat "${INSOMNIA_DIR}/id" 2>/dev/null)"
 	echo "[(insomnia)]${name:+ $name}"
+	exit
 fi
+
+# Find the most recent topic change and exit. Since we don't want to
+# search through the entire backlog we reverse it first by sorting it
+# using the unix timestamp.
+sort -k1 -r "${INSOMNIA_DIR}/out" | sed -n '
+	/^[0-9][0-9]* \[.*\] topic for ..* is: ..*/ {
+		s/^[0-9][0-9]* \[.*\] topic for ..* is: \(.*\)/\1/p
+		q
+	}
+'

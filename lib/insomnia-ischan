@@ -1,3 +1,0 @@
-#!/bin/sh
-
-exec test -S "${INSOMNIA_DIR}/usr"

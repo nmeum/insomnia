@@ -1,6 +1,6 @@
 TARGETS = insomnia lib/insomnia-strftime \
 	  lib/insomnia-unix lib/insomnia-tail \
-	  lib/insomnia-sort
+	  lib/insomnia-sort lib/insomnia-color
 
 PREFIX  ?= /usr/local
 LIBDIR  ?= $(PREFIX)/libexec/insomnia
@@ -26,6 +26,8 @@ lib/insomnia-tail: src/insomnia-tail.c
 	$(CC) -o $@ $< $(CFLAGS) -pthread $(LDFLAGS)
 lib/insomnia-sort: src/insomnia-sort.c
 	$(CC) -o $@ $< $(CFLAGS) $(LDFLAGS)
+lib/insomnia-color: src/insomnia-color.c
+	$(CC) -o $@ $< $(CFLAGS) -pthread $(LDFLAGS)
 
 install: $(TARGETS) README.md
 	install -Dm755 insomnia "$(DESTDIR)$(BINDIR)/insomnia"

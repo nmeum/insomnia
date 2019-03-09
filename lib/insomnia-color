@@ -1,6 +1,8 @@
 #!/usr/bin/awk -f
 
 BEGIN {
+	ECHO = "1;37"
+
 	# Generate ASCII lookup table
 	for (i = 1; i < 127; i++)
 		ascii = sprintf("%s%c", ascii, i)
@@ -12,6 +14,10 @@ BEGIN {
 		colors[colors_len++] = i
 }
 
+function colortext(color, text) {
+	return sprintf("\033[%sm%s\033[0m", color, text)
+}
+
 function nickcolor(nick) {
 	split(nick, chars, "")
 
@@ -19,15 +25,19 @@ function nickcolor(nick) {
 	for (i = 1; i <= length(nick); i++)
 		c += index(ascii, chars[i])
 
-	color = colors[c % colors_len]
-	return sprintf("\033[%dm%s\033[0m", color, nick)
+	return colors[c % colors_len]
 }
 
 /^[0-9]+ \(.+\) .+$/ {
 	# Strip enclosing parentheses from nick
 	nick = substr($2, 2, length($2) - 2)
 
-	text = $1 " " sprintf("(%s)", nickcolor(nick))
+	if (substr($0, length($0), 1) == "\006")
+		color = ECHO
+	else
+		color = nickcolor(nick)
+
+	text = $1 " " sprintf("(%s)", colortext(color, nick))
 	for (i = 3; i <= NF; i++)
 		text = text " " $i
 	$0 = text

@@ -2,6 +2,7 @@
 
 BEGIN {
 	ECHO = "1;37"
+	HIGH = "31"
 
 	# Generate ASCII lookup table
 	for (i = 1; i < 127; i++)
@@ -29,18 +30,22 @@ function nickcolor(nick) {
 }
 
 /^[0-9]+ \(.+\) .+$/ {
-	# Strip enclosing parentheses from nick
 	nick = substr($2, 2, length($2) - 2)
+	suffix = substr($0, length($0), 1)
 
-	if (substr($0, length($0), 1) == "\006")
+	if (suffix == "\006")
 		color = ECHO
 	else
 		color = nickcolor(nick)
 
-	text = $1 " " sprintf("(%s)", colortext(color, nick))
+	preamble = $1 " " sprintf("(%s)", colortext(color, nick))
 	for (i = 3; i <= NF; i++)
 		text = text " " $i
-	$0 = text
+	if (suffix == "\007")
+		text = colortext(HIGH, text)
+
+	$0 = preamble text
+	text = ""
 }
 
 {

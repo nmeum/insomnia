@@ -1,13 +1,6 @@
 #!/usr/bin/awk -f
 
 BEGIN {
-	# See https://no-color.org/
-	nocolor = ENVIRON["NO_COLOR"]
-	if (nocolor == "")
-		colorsetup()
-}
-
-function colorsetup() {
 	# Generate ASCII lookup table
 	for (i = 1; i < 127; i++)
 		ascii = sprintf("%s%c", ascii, i)
@@ -30,7 +23,7 @@ function nickcolor(nick) {
 	return sprintf("\033[%dm%s\033[0m", color, nick)
 }
 
-/^[0-9]+ \(.+\) .+$/ && nocolor == "" {
+/^[0-9]+ \(.+\) .+$/ {
 	# Strip enclosing parentheses from nick
 	nick = substr($2, 2, length($2) - 2)
 

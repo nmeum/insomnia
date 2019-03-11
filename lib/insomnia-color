@@ -4,6 +4,9 @@ BEGIN {
 	ECHO = "1;37"
 	HIGH = "31"
 
+	# Check if the directory represents a channel
+	ischan = system("test -S \"${INSOMNIA_DIR}/usr\"")
+
 	# Generate ASCII lookup table
 	for (i = 1; i < 127; i++)
 		ascii = sprintf("%s%c", ascii, i)
@@ -41,7 +44,7 @@ function nickcolor(nick) {
 	preamble = $1 " " sprintf("(%s)", colortext(color, nick))
 	for (i = 3; i <= NF; i++)
 		text = text " " $i
-	if (suffix == "\007")
+	if (ischan == 0 && suffix == "\007")
 		text = colortext(HIGH, text)
 
 	$0 = preamble text

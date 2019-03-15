@@ -1,13 +1,12 @@
 #!/usr/bin/awk -f
 
 BEGIN {
-	# See https://no-color.org/
-	nocolor = ENVIRON["NO_COLOR"]
-	if (nocolor == "")
-		colorsetup()
-}
+	ECHO = "1;37"
+	HIGH = "31"
 
-function colorsetup() {
+	# Check if the directory represents a channel
+	ischan = system("test -S \"${INSOMNIA_DIR}/usr\"")
+
 	# Generate ASCII lookup table
 	for (i = 1; i < 127; i++)
 		ascii = sprintf("%s%c", ascii, i)
@@ -19,6 +18,10 @@ function colorsetup() {
 		colors[colors_len++] = i
 }
 
+function colortext(color, text) {
+	return sprintf("\033[%sm%s\033[0m", color, text)
+}
+
 function nickcolor(nick) {
 	split(nick, chars, "")
 
@@ -26,18 +29,26 @@ function nickcolor(nick) {
 	for (i = 1; i <= length(nick); i++)
 		c += index(ascii, chars[i])
 
-	color = colors[c % colors_len]
-	return sprintf("\033[%dm%s\033[0m", color, nick)
+	return colors[c % colors_len]
 }
 
-/^[0-9]+ \(.+\) .+$/ && nocolor == "" {
-	# Strip enclosing parentheses from nick
+/^[0-9]+ \(.+\) .+$/ {
 	nick = substr($2, 2, length($2) - 2)
+	suffix = substr($0, length($0), 1)
 
-	text = $1 " " sprintf("(%s)", nickcolor(nick))
+	if (suffix == "\006")
+		color = ECHO
+	else
+		color = nickcolor(nick)
+
+	preamble = $1 " " sprintf("(%s)", colortext(color, nick))
 	for (i = 3; i <= NF; i++)
 		text = text " " $i
-	$0 = text
+	if (ischan == 0 && suffix == "\007")
+		text = colortext(HIGH, text)
+
+	$0 = preamble text
+	text = ""
 }
 
 {

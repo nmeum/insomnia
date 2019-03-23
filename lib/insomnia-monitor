@@ -3,4 +3,5 @@
 find "${INSOMNIA_BASE}" -maxdepth 2 -type f -a -name log \
 	-exec insomnia-tail \{\} \+ | \
 	insomnia-monitor-bell | \
+	insomnia-strip-bell | \
 	insomnia-strftime -c "%x %X" -n ""

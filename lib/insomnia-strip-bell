@@ -1,0 +1,17 @@
+#!/usr/bin/awk -f
+
+BEGIN {
+	# Get current epoch by initializing the PRNG with it.
+	srand()
+	startup = srand()
+}
+
+/\a$/ {
+	if ($1 <= startup)
+		$0 = substr($0, 0, length($0) - 1)
+}
+
+{
+	print
+	fflush()
+}

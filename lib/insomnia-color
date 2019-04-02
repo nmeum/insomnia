@@ -44,10 +44,13 @@ function nickcolor(nick) {
 	preamble = $1 " " sprintf("(%s)", colortext(color, nick))
 	for (i = 3; i <= NF; i++)
 		text = text " " $i
+
+	# Highlight everything except suffix on match
+	text = substr(text, 0, length(text) - 1)
 	if (ischan == 0 && suffix == "\007")
 		text = colortext(HIGH, text)
 
-	$0 = preamble text
+	$0 = preamble text suffix
 	text = ""
 }
 

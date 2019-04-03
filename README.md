@@ -15,7 +15,7 @@ works.
 * Support for highlight "notification" through bell characters.
 	* Use this in combination with tmux's monitor-bell feature.
 * Support for tracking topic changes through tmux pane titles.
-* (Optional) support for nick colors.
+* Support for colorful output.
 
 ## Dependencies
 

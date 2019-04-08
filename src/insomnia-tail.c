@@ -1,4 +1,5 @@
 #include <err.h>
+#include <errno.h>
 #include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -25,7 +26,7 @@ readlines(char *name, FILE *stream)
 	llen = 0;
 
 	while (getline(&line, &llen, stream) != -1) {
-		if (pthread_mutex_lock(&mtx))
+		if ((errno = pthread_mutex_lock(&mtx)))
 			err(EXIT_FAILURE, "pthread_mutex_lock failed");
 
 		fmt = HDRFMT;
@@ -42,7 +43,7 @@ readlines(char *name, FILE *stream)
 		lastthr = thr;
 		firstrun = 0;
 
-		if (pthread_mutex_unlock(&mtx))
+		if ((errno = pthread_mutex_unlock(&mtx)))
 			err(EXIT_FAILURE, "pthread_mutex_unlock failed");
 	}
 
@@ -105,10 +106,10 @@ main(int argc, char **argv)
 		err(EXIT_FAILURE, "malloc failed");
 
 	for (i = 0; i < nthrs; i++)
-		if (pthread_create(&thrs[i], NULL, tail, argv[i + 1]))
+		if ((errno = pthread_create(&thrs[i], NULL, tail, argv[i + 1])))
 			err(EXIT_FAILURE, "pthread_create failed");
 	for (i = 0; i < nthrs; i++)
-		if (pthread_join(thrs[i], NULL))
+		if ((errno = pthread_join(thrs[i], NULL)))
 			err(EXIT_FAILURE, "pthread_join failed");
 
 	return EXIT_SUCCESS;

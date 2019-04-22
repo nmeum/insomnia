@@ -2,3 +2,4 @@ insomnia
 lib/insomnia-strftime
 lib/insomnia-unix
 lib/insomnia-tail
+lib/insomnia-sort

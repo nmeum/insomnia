@@ -2,7 +2,7 @@
 
 find "${INSOMNIA_BASE}" -maxdepth 2 -type f -a -name log \
 	-exec insomnia-tail \{\} \+ | \
-	insomnia-sort | \
+	insomnia-sort "${INSOMNIA_SORT_DELAY:-5}" | \
 	insomnia-monitor-bell | \
 	insomnia-strip-bell | \
 	insomnia-strftime -c "%x %X" -n ""

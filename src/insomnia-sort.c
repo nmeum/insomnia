@@ -10,8 +10,6 @@
 
 static char **lines;
 static size_t nlines;
-
-enum { delay = 5 };
 static int threshold;
 
 static int
@@ -51,12 +49,17 @@ sigalarm(int num)
 }
 
 int
-main(void)
+main(int argc, char **argv)
 {
 	char *line;
 	size_t llen;
 	struct sigaction act;
 	sigset_t blockset, oldset;
+
+	if (argc <= 1) {
+		fprintf(stderr, "USAGE: %s DELAY\n", argv[0]);
+		return EXIT_FAILURE;
+	}
 
 	act.sa_flags = SA_RESTART;
 	act.sa_handler = sigalarm;
@@ -76,7 +79,7 @@ main(void)
 	line = NULL;
 	llen = 0;
 
-	alarm(delay);
+	alarm(atoi(argv[1]));
 	while (getline(&line, &llen, stdin) != -1) {
 		if (threshold) {
 			free(lines);

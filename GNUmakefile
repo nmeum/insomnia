@@ -8,7 +8,8 @@ BINDIR ?= $(PREFIX)/bin
 DOCDIR ?= $(PREFIX)/share/doc/insomnia
 
 CFLAGS ?= -Werror -Os
-CFLAGS += -std=c99 -Wpedantic -Wall -Wextra
+CFLAGS += -std=c99 -D_POSIX_C_SOURCE=200809L
+CFLAGS += -Wpedantic -Wall -Wextra
 
 all: $(TARGETS)
 insomnia: insomnia.in
@@ -16,13 +17,13 @@ insomnia: insomnia.in
 	chmod +x $@
 
 lib/insomnia-strftime: src/insomnia-strftime.c
-	$(CC) -o $@ $< $(CFLAGS) -D_POSIX_C_SOURCE=200809L $(LDFLAGS)
+	$(CC) -o $@ $< $(CFLAGS) $(LDFLAGS)
 lib/insomnia-unix: src/insomnia-unix.c
 	$(CC) -o $@ $< $(CFLAGS) $(LDFLAGS)
 lib/insomnia-tail: src/insomnia-tail.c
-	$(CC) -o $@ $< $(CFLAGS) -D_POSIX_C_SOURCE=200809L -pthread $(LDFLAGS)
+	$(CC) -o $@ $< $(CFLAGS) -pthread $(LDFLAGS)
 lib/insomnia-sort: src/insomnia-sort.c
-	$(CC) -o $@ $< $(CFLAGS) -D_POSIX_C_SOURCE=200809L $(LDFLAGS)
+	$(CC) -o $@ $< $(CFLAGS) $(LDFLAGS)
 
 install: $(TARGETS) README.md
 	install -Dm755 insomnia "$(DESTDIR)$(BINDIR)/insomnia"

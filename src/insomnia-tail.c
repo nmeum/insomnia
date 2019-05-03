@@ -9,40 +9,58 @@
 #include <sys/wait.h>
 #include <sys/types.h>
 
-#define HDRFMT "\n==> %s <==\n\n"
-
-static int firstrun = 1;
-static pthread_t lastthr;
 static pthread_mutex_t mtx = PTHREAD_MUTEX_INITIALIZER;
 
-static void
-readlines(char *name, FILE *stream)
+static ssize_t
+servername(char **dest, char *fp)
 {
-	size_t llen;
-	pthread_t thr;
-	char *fmt, *line;
+	char *p, *last, *prev;
+
+	last = prev = NULL;
+	p = &fp[strlen(fp)];
+
+	while (p-- != fp) {
+		if (*p != '/')
+			continue;
+
+		if (!last) {
+			last = p;
+		} else if (!prev) {
+			prev = p;
+			break;
+		}
+	}
+
+	if (!last || !prev)
+		return -1;
+
+	*dest = ++prev;
+	return last - prev;
+}
+
+static void
+readlines(char *fp, FILE *stream)
+{
+	size_t llen, nlen;
+	char *nickstart, *line, *name;
 
 	line = NULL;
 	llen = 0;
 
+	name = NULL;
+	if ((nlen = servername(&name, fp)) <= 0)
+		return;
+
 	while (getline(&line, &llen, stream) != -1) {
+		if (!(nickstart = strchr(line, '[')))
+			continue;
 		if ((errno = pthread_mutex_lock(&mtx)))
 			err(EXIT_FAILURE, "pthread_mutex_lock failed");
 
-		fmt = HDRFMT;
-		if (firstrun)
-			fmt += 1; /* skip newline */
+		printf("%.*s[%.*s %s", (int)(nickstart - line), line,
+			(int)nlen, name, nickstart + 1);
 
-		thr = pthread_self();
-		if (firstrun || !pthread_equal(thr, lastthr))
-			printf(fmt, name);
-
-		printf("%s", line);
 		fflush(stdout);
-
-		lastthr = thr;
-		firstrun = 0;
-
 		if ((errno = pthread_mutex_unlock(&mtx)))
 			err(EXIT_FAILURE, "pthread_mutex_unlock failed");
 	}

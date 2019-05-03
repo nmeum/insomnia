@@ -15,9 +15,9 @@ function ischan(channel) {
 }
 
 /^[0-9]* \[.+\] \(.+\) .+$/ {
-	source = substr($2, 2, length($2) - 2)
+	source = substr($3, 0, length($3) - 1)
 	if (!ischan(source))
-		source = substr($3, 2, length($3) - 2)
+		source = substr($4, 2, length($4) - 2)
 
 	if (source != name || name == "") {
 		printf("%s\a\n", $0)

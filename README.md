@@ -2,6 +2,10 @@
 
 A frontend for the [hii][hii github] IRC client.
 
+## Screenshot
+
+![insomnia screenshot](https://gist.githubusercontent.com/nmeum/3886bef9c4b07f42bcc4d15da1c0177e/raw/8d01fbe80a7843fec58f098fcdca591fecdc97a9/insomnia.png)
+
 ## Status
 
 insomnia is just a collection of small programs and scripts which are

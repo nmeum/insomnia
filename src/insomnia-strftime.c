@@ -1,4 +1,5 @@
 #include <err.h>
+#include <errno.h>
 #include <time.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -40,8 +41,9 @@ inloop(char *cfmt, char *nfmt)
 		*sep = '\0';
 		tptr = line;
 
-		if (!(epoch = strtoull(line, NULL, 10)) ||
-				!(tm = localtime((time_t*)&epoch)))
+		errno = 0;
+		epoch = strtoull(line, NULL, 10);
+		if (errno || !(tm = localtime((time_t*)&epoch)))
 			goto cont;
 
 		if (prevday != -1 && prevday != tm->tm_yday) {

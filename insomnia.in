@@ -50,7 +50,7 @@ tmux set-window-option -t "=${session}:$" \
 	pane-border-status top
 tmux set-window-option -t "=${session}:$" \
 	pane-border-format "#T"
-tmux select-pane -t "=${session}:.2" \
+tmux select-pane -t "=${session}:$" \
 	-T ""
 
 exec tmux attach -t "${session}"

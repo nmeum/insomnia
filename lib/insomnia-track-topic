@@ -1,6 +1,6 @@
 #!/usr/bin/awk -f
 
-/^[0-9]+ \[.+\] \*\*\* .+ has set the topic to: .+$/ {
+/^[0-9]+ \*\*\* .+ has set the topic to: .+$/ {
 	topic = $10
 	for (i = 11; i <= NF; i++)
 		topic = topic " " $i

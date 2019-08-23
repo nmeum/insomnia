@@ -3,7 +3,6 @@
 #include <time.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include <time.h>
 #include <unistd.h>
 
@@ -24,7 +23,7 @@ static void
 inloop(char *cfmt, char *nfmt)
 {
 	unsigned long long epoch;
-	char *line, *sep, *tptr;
+	char *line, *tend, *tptr;
 	char tbuf[MAXTM];
 	struct tm *tm;
 	size_t len;
@@ -33,16 +32,8 @@ inloop(char *cfmt, char *nfmt)
 	line = NULL;
 
 	while (getline(&line, &len, INSTR) != -1) {
-		if (!(sep = strchr(line, DELIM))) {
-			printf("%s", line);
-			continue;
-		}
-
-		*sep = '\0';
-		tptr = line;
-
 		errno = 0;
-		epoch = strtoull(line, NULL, 10);
+		epoch = strtoull(line, &tend, 10);
 		if (errno || !(tm = localtime((time_t*)&epoch)))
 			goto cont;
 
@@ -63,10 +54,7 @@ inloop(char *cfmt, char *nfmt)
 		}
 
 cont:
-		/* getline(3) should guarantee that there always is at
-		 * least a newline after DELIM thus `++sep` should
-		 * always point to a valid memory location. */
-		printf("%s %s", tptr, ++sep);
+		printf("%s%s", tptr, tend);
 	}
 
 	if (ferror(INSTR))

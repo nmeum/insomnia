@@ -26,15 +26,13 @@ xstrftime(char *fmt, struct tm *tm)
 static void
 inloop(char *cfmt, char *nfmt)
 {
-	char *line, *tend, *tptr, *tbuf;
+	static char *line;
+	static size_t llen;
+	char *tend, *tptr, *tbuf;
 	unsigned long long epoch;
 	struct tm *tm;
-	size_t len;
 
-	len = 0;
-	line = NULL;
-
-	while (getline(&line, &len, stdin) != -1) {
+	while (getline(&line, &llen, stdin) != -1) {
 		errno = 0;
 		epoch = strtoull(line, &tend, 10);
 		if (errno || !(tm = localtime((time_t*)&epoch)))

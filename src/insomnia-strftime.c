@@ -14,16 +14,24 @@ static int prevday = -1;
 #define CUFMT "%X"
 #define NXFMT "%d %b %Y"
 
-enum {
-	MAXTM = 256,
-};
+static char *
+xstrftime(char *fmt, struct tm *tm)
+{
+	static char tbuf[256];
+
+	if (!strftime(tbuf, sizeof(tbuf), fmt, tm)) {
+		warnx("strftime failed for '%s'", fmt);
+		return NULL;
+	}
+
+	return tbuf;
+}
 
 static void
 inloop(char *cfmt, char *nfmt)
 {
+	char *line, *tend, *tptr, *tbuf;
 	unsigned long long epoch;
-	char *line, *tend, *tptr;
-	char tbuf[MAXTM];
 	struct tm *tm;
 	size_t len;
 
@@ -37,19 +45,15 @@ inloop(char *cfmt, char *nfmt)
 			goto cont;
 
 		if (prevday != -1 && prevday != tm->tm_yday) {
-			if (strftime(tbuf, sizeof(tbuf), nfmt, tm))
+			if ((tbuf = xstrftime(nfmt, tm)))
 				printf("Day changed to %s\n", tbuf);
-			else
-				warnx("strftime failed for '%s'", nfmt);
 		}
 
 		if (*nfmt != '\0')
 			prevday = tm->tm_yday;
 		if (*cfmt != '\0') {
-			if (strftime(tbuf, sizeof(tbuf), cfmt, tm))
+			if ((tbuf = xstrftime(cfmt, tm)))
 				tptr = tbuf;
-			else
-				warnx("strftime failed for '%s'", cfmt);
 		}
 
 cont:

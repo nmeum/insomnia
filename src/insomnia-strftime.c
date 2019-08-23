@@ -86,8 +86,5 @@ main(int argc, char **argv)
 		nfmt = NXFMT;
 
 	inloop(cfmt, nfmt);
-	if (ferror(INSTR))
-		errx(EXIT_FAILURE, "ferror failed");
-
 	return EXIT_SUCCESS;
 }

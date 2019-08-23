@@ -15,7 +15,6 @@ static int prevday = -1;
 #define NXFMT "%d %b %Y"
 
 enum {
-	DELIM = ' ',
 	MAXTM = 256,
 };
 

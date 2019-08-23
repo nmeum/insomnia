@@ -10,10 +10,6 @@
 
 static int prevday = -1;
 
-#define INSTR stdin
-#define CUFMT "%X"
-#define NXFMT "%d %b %Y"
-
 static char *
 xstrftime(char *fmt, struct tm *tm)
 {
@@ -38,7 +34,7 @@ inloop(char *cfmt, char *nfmt)
 	len = 0;
 	line = NULL;
 
-	while (getline(&line, &len, INSTR) != -1) {
+	while (getline(&line, &len, stdin) != -1) {
 		errno = 0;
 		epoch = strtoull(line, &tend, 10);
 		if (errno || !(tm = localtime((time_t*)&epoch)))
@@ -60,7 +56,7 @@ cont:
 		printf("%s%s", tptr, tend);
 	}
 
-	if (ferror(INSTR))
+	if (ferror(stdin))
 		errx(EXIT_FAILURE, "ferror failed");
 	free(line);
 }
@@ -84,9 +80,9 @@ main(int argc, char **argv)
 	}
 
 	if (!cfmt)
-		cfmt = CUFMT;
+		cfmt = "%X";
 	if (!nfmt)
-		nfmt = NXFMT;
+		nfmt = "%d %b %Y";
 
 	inloop(cfmt, nfmt);
 	return EXIT_SUCCESS;

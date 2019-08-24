@@ -9,7 +9,7 @@
 
 static char **lines;
 static size_t nlines;
-static int threshold;
+static int sortdone;
 
 enum {
 	LINESTEP = 16,
@@ -49,7 +49,7 @@ sigalarm(int num)
 	size_t i;
 	(void)num;
 
-	threshold = 1;
+	sortdone = 1;
 	sortprint();
 
 	for (i = 0; i < nlines; i++)
@@ -112,7 +112,7 @@ main(int argc, char **argv)
 	alarm(delay);
 
 	while (getline(&line, &llen, stdin) != -1) {
-		if (threshold) {
+		if (sortdone) {
 			printf("%s", line);
 			fflush(stdout);
 			continue;

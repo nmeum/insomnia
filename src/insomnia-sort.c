@@ -48,18 +48,10 @@ sigalarm(int num)
 	sortprint();
 }
 
-int
-main(int argc, char **argv)
+static void
+sethandler(void)
 {
-	char *line;
-	size_t llen;
 	struct sigaction act;
-	sigset_t blockset, oldset;
-
-	if (argc <= 1) {
-		fprintf(stderr, "USAGE: %s DELAY\n", argv[0]);
-		return EXIT_FAILURE;
-	}
 
 	act.sa_flags = SA_RESTART;
 	act.sa_handler = sigalarm;
@@ -67,7 +59,21 @@ main(int argc, char **argv)
 		err(EXIT_FAILURE, "sigemptyset failed");
 	if (sigaction(SIGALRM, &act, NULL))
 			err(EXIT_FAILURE, "sigaction failed");
+}
 
+int
+main(int argc, char **argv)
+{
+	char *line;
+	size_t llen;
+	sigset_t blockset, oldset;
+
+	if (argc <= 1) {
+		fprintf(stderr, "USAGE: %s DELAY\n", argv[0]);
+		return EXIT_FAILURE;
+	}
+
+	sethandler();
 	if (sigemptyset(&blockset) == -1)
 		err(EXIT_FAILURE, "sigemptyset failed");
 	sigaddset(&blockset, SIGALRM);

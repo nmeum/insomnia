@@ -41,22 +41,20 @@ sortprint(void)
 	for (i = 0; i < nlines; i++)
 		printf("%s", lines[i]);
 	fflush(stdout);
-}
-
-static void
-sigalarm(int num)
-{
-	size_t i;
-	(void)num;
-
-	sortdone = 1;
-	sortprint();
 
 	for (i = 0; i < nlines; i++)
 		free(lines[i]);
 	free(lines);
 	lines = NULL;
 	nlines = 0;
+}
+
+static void
+sigalarm(int num)
+{
+	(void)num;
+	sortdone = 1;
+	sortprint();
 }
 
 static void

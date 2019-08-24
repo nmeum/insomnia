@@ -1,5 +1,4 @@
 #include <err.h>
-#include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -101,11 +100,8 @@ main(int argc, char **argv)
 		return EXIT_FAILURE;
 	}
 
-	errno = 0;
-	delay = strtoul(argv[1], NULL, 10);
-	if (errno)
-		err(EXIT_FAILURE, "strtoul failed for '%s'", argv[1]);
-
+	if (!(delay = strtoul(argv[1], NULL, 10)))
+		errx(EXIT_FAILURE, "delay must be a uint greater zero");
 	if (!(lines = malloc(LINESTEP * sizeof(char*))))
 		err(EXIT_FAILURE, "malloc failed");
 

@@ -47,9 +47,17 @@ sortprint(void)
 static void
 sigalarm(int num)
 {
+	size_t i;
 	(void)num;
+
 	threshold = 1;
 	sortprint();
+
+	for (i = 0; i < nlines; i++)
+		free(lines[i]);
+	free(lines);
+	lines = NULL;
+	nlines = 0;
 }
 
 static void
@@ -103,10 +111,6 @@ main(int argc, char **argv)
 	alarm(atoi(argv[1]));
 	while (getline(&line, &llen, stdin) != -1) {
 		if (threshold) {
-			free(lines);
-			lines = NULL;
-			nlines = 0;
-
 			printf("%s", line);
 			fflush(stdout);
 			continue;

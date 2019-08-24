@@ -73,14 +73,14 @@ main(int argc, char **argv)
 		return EXIT_FAILURE;
 	}
 
+	nlines = 1;
+	if (!(lines = malloc(1 * sizeof(char*))))
+		err(EXIT_FAILURE, "malloc failed");
+
 	sethandler();
 	if (sigemptyset(&blockset) == -1)
 		err(EXIT_FAILURE, "sigemptyset failed");
 	sigaddset(&blockset, SIGALRM);
-
-	nlines = 1;
-	if (!(lines = malloc(1 * sizeof(char*))))
-		err(EXIT_FAILURE, "malloc failed");
 
 	alarm(atoi(argv[1]));
 	while (getline(&line, &llen, stdin) != -1) {

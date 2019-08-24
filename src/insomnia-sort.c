@@ -64,8 +64,8 @@ sethandler(void)
 int
 main(int argc, char **argv)
 {
-	char *line;
-	size_t llen;
+	static char *line;
+	static size_t llen;
 	sigset_t blockset, oldset;
 
 	if (argc <= 1) {
@@ -81,9 +81,6 @@ main(int argc, char **argv)
 	nlines = 1;
 	if (!(lines = malloc(1 * sizeof(char*))))
 		err(EXIT_FAILURE, "malloc failed");
-
-	line = NULL;
-	llen = 0;
 
 	alarm(atoi(argv[1]));
 	while (getline(&line, &llen, stdin) != -1) {

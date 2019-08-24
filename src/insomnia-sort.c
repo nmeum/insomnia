@@ -87,13 +87,35 @@ sethandler(void)
 			err(EXIT_FAILURE, "sigaction failed");
 }
 
+static void
+inloop(sigset_t *blockset)
+{
+	static char *line;
+	static size_t llen;
+	sigset_t oldset;
+
+	while (getline(&line, &llen, stdin) != -1) {
+		if (sortdone) {
+			printf("%s", line);
+			fflush(stdout);
+			continue;
+		}
+
+		if (sigprocmask(SIG_BLOCK, blockset, &oldset))
+			err(EXIT_FAILURE, "signal blocking failed");
+		bufferline(line);
+		if (sigprocmask(SIG_SETMASK, &oldset, NULL))
+			err(EXIT_FAILURE, "signal unblocking failed");
+	}
+	if (ferror(stdin))
+		err(EXIT_FAILURE, "ferror failed");
+}
+
 int
 main(int argc, char **argv)
 {
 	unsigned int delay;
-	static char *line;
-	static size_t llen;
-	sigset_t blockset, oldset;
+	sigset_t blockset;
 
 	if (argc <= 1) {
 		fprintf(stderr, "USAGE: %s DELAY\n", argv[0]);
@@ -111,22 +133,7 @@ main(int argc, char **argv)
 	sigaddset(&blockset, SIGALRM);
 	alarm(delay);
 
-	while (getline(&line, &llen, stdin) != -1) {
-		if (sortdone) {
-			printf("%s", line);
-			fflush(stdout);
-			continue;
-		}
-
-		if (sigprocmask(SIG_BLOCK, &blockset, &oldset))
-			err(EXIT_FAILURE, "signal blocking failed");
-		bufferline(line);
-		if (sigprocmask(SIG_SETMASK, &oldset, NULL))
-			err(EXIT_FAILURE, "signal unblocking failed");
-	}
-
-	if (ferror(stdin))
-		err(EXIT_FAILURE, "ferror failed");
+	inloop(&blockset);
 	sortprint();
 
 	return EXIT_SUCCESS;

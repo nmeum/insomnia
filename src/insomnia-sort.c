@@ -91,6 +91,7 @@ sethandler(void)
 int
 main(int argc, char **argv)
 {
+	unsigned int delay;
 	static char *line;
 	static size_t llen;
 	sigset_t blockset, oldset;
@@ -100,6 +101,11 @@ main(int argc, char **argv)
 		return EXIT_FAILURE;
 	}
 
+	errno = 0;
+	delay = strtoul(argv[1], NULL, 10);
+	if (errno)
+		err(EXIT_FAILURE, "strtoul failed for '%s'", argv[1]);
+
 	if (!(lines = malloc(LINESTEP * sizeof(char*))))
 		err(EXIT_FAILURE, "malloc failed");
 
@@ -107,8 +113,8 @@ main(int argc, char **argv)
 	if (sigemptyset(&blockset) == -1)
 		err(EXIT_FAILURE, "sigemptyset failed");
 	sigaddset(&blockset, SIGALRM);
+	alarm(delay);
 
-	alarm(atoi(argv[1]));
 	while (getline(&line, &llen, stdin) != -1) {
 		if (threshold) {
 			printf("%s", line);

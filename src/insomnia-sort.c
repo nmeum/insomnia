@@ -12,6 +12,10 @@ static char **lines;
 static size_t nlines;
 static int threshold;
 
+enum {
+	LINESTEP = 16,
+};
+
 static int
 compar(const void *s1, const void *s2)
 {
@@ -34,8 +38,8 @@ sortprint(void)
 {
 	size_t i;
 
-	qsort(lines, nlines - 1, sizeof(char*), compar);
-	for (i = 0; i < nlines - 1; i++)
+	qsort(lines, nlines, sizeof(char*), compar);
+	for (i = 0; i < nlines; i++)
 		printf("%s", lines[i]);
 	fflush(stdout);
 }
@@ -46,6 +50,21 @@ sigalarm(int num)
 	(void)num;
 	threshold = 1;
 	sortprint();
+}
+
+static void
+bufferline(char *line)
+{
+	size_t newsiz;
+
+	if (nlines && nlines % LINESTEP == 0) {
+		newsiz = (nlines + LINESTEP) * sizeof(char*);
+		if (!(lines = realloc(lines, newsiz)))
+			err(EXIT_FAILURE, "realloc failed");
+	}
+
+	if (!(lines[nlines++] = strdup(line)))
+		err(EXIT_FAILURE, "strdup failed");
 }
 
 static void
@@ -73,8 +92,7 @@ main(int argc, char **argv)
 		return EXIT_FAILURE;
 	}
 
-	nlines = 1;
-	if (!(lines = malloc(1 * sizeof(char*))))
+	if (!(lines = malloc(LINESTEP * sizeof(char*))))
 		err(EXIT_FAILURE, "malloc failed");
 
 	sethandler();
@@ -87,7 +105,7 @@ main(int argc, char **argv)
 		if (threshold) {
 			free(lines);
 			lines = NULL;
-			nlines = 1;
+			nlines = 0;
 
 			printf("%s", line);
 			fflush(stdout);
@@ -96,12 +114,7 @@ main(int argc, char **argv)
 
 		if (sigprocmask(SIG_BLOCK, &blockset, &oldset))
 			err(EXIT_FAILURE, "signal blocking failed");
-
-		if (!(lines[nlines - 1] = strdup(line)))
-			err(EXIT_FAILURE, "strdup failed");
-		if (!(lines = realloc(lines, ++nlines * sizeof(char*))))
-			err(EXIT_FAILURE, "realloc failed");
-
+		bufferline(line);
 		if (sigprocmask(SIG_SETMASK, &oldset, NULL))
 			err(EXIT_FAILURE, "signal unblocking failed");
 	}

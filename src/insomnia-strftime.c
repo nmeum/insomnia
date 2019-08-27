@@ -3,7 +3,6 @@
 #include <time.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include <time.h>
 #include <unistd.h>
 
@@ -11,65 +10,51 @@
 
 static int prevday = -1;
 
-#define INSTR stdin
-#define CUFMT "%X"
-#define NXFMT "%d %b %Y"
+static char *
+xstrftime(char *fmt, struct tm *tm)
+{
+	static char tbuf[256];
 
-enum {
-	DELIM = ' ',
-	MAXTM = 256,
-};
+	if (!strftime(tbuf, sizeof(tbuf), fmt, tm)) {
+		warnx("strftime failed for '%s'", fmt);
+		return NULL;
+	}
+
+	return tbuf;
+}
 
 static void
 inloop(char *cfmt, char *nfmt)
 {
+	static char *line;
+	static size_t llen;
+	char *tend, *tptr, *tbuf;
 	unsigned long long epoch;
-	char *line, *sep, *tptr;
-	char tbuf[MAXTM];
 	struct tm *tm;
-	size_t len;
 
-	len = 0;
-	line = NULL;
-
-	while (getline(&line, &len, INSTR) != -1) {
-		if (!(sep = strchr(line, DELIM))) {
-			printf("%s", line);
-			continue;
-		}
-
-		*sep = '\0';
-		tptr = line;
-
+	while (getline(&line, &llen, stdin) != -1) {
 		errno = 0;
-		epoch = strtoull(line, NULL, 10);
+		epoch = strtoull(line, &tend, 10);
 		if (errno || !(tm = localtime((time_t*)&epoch)))
 			goto cont;
 
 		if (prevday != -1 && prevday != tm->tm_yday) {
-			if (strftime(tbuf, sizeof(tbuf), nfmt, tm))
+			if ((tbuf = xstrftime(nfmt, tm)))
 				printf("Day changed to %s\n", tbuf);
-			else
-				warnx("strftime failed for '%s'", nfmt);
 		}
 
 		if (*nfmt != '\0')
 			prevday = tm->tm_yday;
 		if (*cfmt != '\0') {
-			if (strftime(tbuf, sizeof(tbuf), cfmt, tm))
+			if ((tbuf = xstrftime(cfmt, tm)))
 				tptr = tbuf;
-			else
-				warnx("strftime failed for '%s'", cfmt);
 		}
 
 cont:
-		/* getline(3) should guarantee that there always is at
-		 * least a newline after DELIM thus `++sep` should
-		 * always point to a valid memory location. */
-		printf("%s %s", tptr, ++sep);
+		printf("%s%s", tptr, tend);
 	}
 
-	if (ferror(INSTR))
+	if (ferror(stdin))
 		errx(EXIT_FAILURE, "ferror failed");
 	free(line);
 }
@@ -93,13 +78,10 @@ main(int argc, char **argv)
 	}
 
 	if (!cfmt)
-		cfmt = CUFMT;
+		cfmt = "%X";
 	if (!nfmt)
-		nfmt = NXFMT;
+		nfmt = "%d %b %Y";
 
 	inloop(cfmt, nfmt);
-	if (ferror(INSTR))
-		errx(EXIT_FAILURE, "ferror failed");
-
 	return EXIT_SUCCESS;
 }

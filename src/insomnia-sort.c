@@ -1,5 +1,4 @@
 #include <err.h>
-#include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -10,7 +9,11 @@
 
 static char **lines;
 static size_t nlines;
-static int threshold;
+static int sortdone;
+
+enum {
+	LINESTEP = 16,
+};
 
 static int
 compar(const void *s1, const void *s2)
@@ -34,32 +37,45 @@ sortprint(void)
 {
 	size_t i;
 
-	qsort(lines, nlines - 1, sizeof(char*), compar);
-	for (i = 0; i < nlines - 1; i++)
+	qsort(lines, nlines, sizeof(char*), compar);
+	for (i = 0; i < nlines; i++)
 		printf("%s", lines[i]);
 	fflush(stdout);
+
+	for (i = 0; i < nlines; i++)
+		free(lines[i]);
+	free(lines);
+	lines = NULL;
+	nlines = 0;
 }
 
 static void
 sigalarm(int num)
 {
 	(void)num;
-	threshold = 1;
+	sortdone = 1;
 	sortprint();
 }
 
-int
-main(int argc, char **argv)
+static void
+bufferline(char *line)
 {
-	char *line;
-	size_t llen;
-	struct sigaction act;
-	sigset_t blockset, oldset;
+	size_t newsiz;
 
-	if (argc <= 1) {
-		fprintf(stderr, "USAGE: %s DELAY\n", argv[0]);
-		return EXIT_FAILURE;
+	if (nlines && nlines % LINESTEP == 0) {
+		newsiz = (nlines + LINESTEP) * sizeof(char*);
+		if (!(lines = realloc(lines, newsiz)))
+			err(EXIT_FAILURE, "realloc failed");
 	}
+
+	if (!(lines[nlines++] = strdup(line)))
+		err(EXIT_FAILURE, "strdup failed");
+}
+
+static void
+sethandler(void)
+{
+	struct sigaction act;
 
 	act.sa_flags = SA_RESTART;
 	act.sa_handler = sigalarm;
@@ -67,44 +83,55 @@ main(int argc, char **argv)
 		err(EXIT_FAILURE, "sigemptyset failed");
 	if (sigaction(SIGALRM, &act, NULL))
 			err(EXIT_FAILURE, "sigaction failed");
+}
 
-	if (sigemptyset(&blockset) == -1)
-		err(EXIT_FAILURE, "sigemptyset failed");
-	sigaddset(&blockset, SIGALRM);
+static void
+inloop(sigset_t *blockset)
+{
+	static char *line;
+	static size_t llen;
+	sigset_t oldset;
 
-	nlines = 1;
-	if (!(lines = malloc(1 * sizeof(char*))))
-		err(EXIT_FAILURE, "malloc failed");
-
-	line = NULL;
-	llen = 0;
-
-	alarm(atoi(argv[1]));
 	while (getline(&line, &llen, stdin) != -1) {
-		if (threshold) {
-			free(lines);
-			lines = NULL;
-			nlines = 1;
-
+		if (sortdone) {
 			printf("%s", line);
 			fflush(stdout);
 			continue;
 		}
 
-		if (sigprocmask(SIG_BLOCK, &blockset, &oldset))
+		if (sigprocmask(SIG_BLOCK, blockset, &oldset))
 			err(EXIT_FAILURE, "signal blocking failed");
-
-		if (!(lines[nlines - 1] = strdup(line)))
-			err(EXIT_FAILURE, "strdup failed");
-		if (!(lines = realloc(lines, ++nlines * sizeof(char*))))
-			err(EXIT_FAILURE, "realloc failed");
-
+		bufferline(line);
 		if (sigprocmask(SIG_SETMASK, &oldset, NULL))
 			err(EXIT_FAILURE, "signal unblocking failed");
 	}
-
 	if (ferror(stdin))
 		err(EXIT_FAILURE, "ferror failed");
+}
+
+int
+main(int argc, char **argv)
+{
+	unsigned int delay;
+	sigset_t blockset;
+
+	if (argc <= 1) {
+		fprintf(stderr, "USAGE: %s DELAY\n", argv[0]);
+		return EXIT_FAILURE;
+	}
+
+	if (!(delay = strtoul(argv[1], NULL, 10)))
+		errx(EXIT_FAILURE, "delay must be a uint greater zero");
+	if (!(lines = malloc(LINESTEP * sizeof(char*))))
+		err(EXIT_FAILURE, "malloc failed");
+
+	sethandler();
+	if (sigemptyset(&blockset) == -1)
+		err(EXIT_FAILURE, "sigemptyset failed");
+	sigaddset(&blockset, SIGALRM);
+	alarm(delay);
+
+	inloop(&blockset);
 	sortprint();
 
 	return EXIT_SUCCESS;

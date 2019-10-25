@@ -1,7 +1,7 @@
 #!/usr/bin/awk -f
 
 /^[0-9]+ \*\*\* .+ has set the topic to: .+$/ {
-	topic = $10
+	topic = $9
 	for (i = 11; i <= NF; i++)
 		topic = topic " " $i
 

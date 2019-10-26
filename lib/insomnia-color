@@ -32,7 +32,7 @@ function nickcolor(nick) {
 	return colors[c % colors_len]
 }
 
-/^[0-9]+ \(.+\) .+$/ {
+/^[0-9]+ \(.+\) .*$/ {
 	nick = substr($2, 2, length($2) - 2)
 	suffix = substr($0, length($0), 1)
 

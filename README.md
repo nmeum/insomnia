@@ -62,6 +62,20 @@ This will only work if an `hii` instance for `irc.hackint.org` is
 already running in the background and if the user already joined the
 `#hii` channel.
 
+## Input Configuration
+
+Since version 1.0.0 input uses readline instead of linenoise. By default
+readline completions are displayed above the input current line which is
+somewhat useless in one-line terminals. Fortunately, readline also
+supports menu completions (cycling through all available completions).
+Additionally, readline performs line wrapping by default which doesn't
+work in one-line terminals either instead horizontal scrolling has to be
+explicitly activated. Therefore, creating a `~/.inputrc` with the
+following content is recommended for using input with insomnia:
+
+	"\t": menu-complete
+	set horizontal-scroll-mode on
+
 ## License
 
 This program is free software: you can redistribute it and/or modify it

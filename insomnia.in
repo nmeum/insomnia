@@ -52,5 +52,6 @@ tmux set-window-option -t "=${session}:$" \
 	pane-border-format "#T"
 tmux select-pane -t "=${session}:$" \
 	-T ""
+tmux bind-key x run-shell "env ${vars} insomnia-menu"
 
 exec tmux attach -t "${session}"

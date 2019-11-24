@@ -1,0 +1,40 @@
+#!/usr/bin/awk -f
+
+function escape(path) {
+	escaped = ""
+	split(path, chars, "")
+
+	c = 0
+	for (i = 1; i <= length(path); i++) {
+		if (index("#,}", chars[i]))
+			escaped = escaped "#"
+		escaped = escaped chars[i]
+	}
+
+	return escaped
+}
+
+function server(path) {
+	if (index(path, "/") == 0)
+		return path
+	else
+		return substr(path, 0, index(path, "/") - 1)
+}
+
+BEGIN {
+	tmuxcmd = "tmux display-menu -xW -yS"
+}
+
+{
+	curserver = server($0)
+	if (prevserver && prevserver != curserver)
+		tmuxcmd = sprintf("%s ''", tmuxcmd);
+	prevserver = curserver
+
+	cmd = sprintf("run-shell insomnia '%s'", $0)
+	tmuxcmd = sprintf("%s '%s' '' '%s'", tmuxcmd, escape($0), "", cmd)
+}
+
+END {
+	system(tmuxcmd)
+}

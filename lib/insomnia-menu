@@ -1,0 +1,4 @@
+#!/bin/sh
+
+tmux display-message "insomnia-menu"
+insomnia-channels | sort | insomnia-menu-filter

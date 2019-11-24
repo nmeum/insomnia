@@ -1,0 +1,4 @@
+#!/bin/sh
+
+find "${INSOMNIA_BASE}/" -maxdepth 3 -name in -a -type p | \
+	sed "s|^${INSOMNIA_BASE}/\(.*\)/in|\1|"

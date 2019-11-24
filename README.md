@@ -43,13 +43,13 @@ To build and install insomnia run the following commands:
 	$ make install
 
 Consult the `GNUmakefile` for environment variables which can be used to
-configure the installation. The variable `LIBDIR` is special and needs
-to be set for both targets `make` and `make install`.
+configure the installation. The variables `LIBDIR` and `DATADIR` are
+special and need to be set for both targets `make` and `make install`.
 
 In case you don't want to install insomnia globally but just want to
 experiment with it compile insomnia using the following commands:
 
-	$ export LIBDIR="$(pwd)/lib"
+	$ export LIBDIR="$(pwd)/lib" DATADIR="$(pwd)/data"
 	$ make
 
 ## Usage
@@ -61,20 +61,6 @@ After a successful installation `insomnia` can be invoked as follows:
 This will only work if an `hii` instance for `irc.hackint.org` is
 already running in the background and if the user already joined the
 `#hii` channel.
-
-## Input Configuration
-
-Since version 1.0.0 input uses readline instead of linenoise. By default
-readline completions are displayed above the input current line which is
-somewhat useless in one-line terminals. Fortunately, readline also
-supports menu completions (cycling through all available completions).
-Additionally, readline performs line wrapping by default which doesn't
-work in one-line terminals either instead horizontal scrolling has to be
-explicitly activated. Therefore, creating a `~/.inputrc` with the
-following content is recommended for using input with insomnia:
-
-	"\t": menu-complete
-	set horizontal-scroll-mode on
 
 ## License
 

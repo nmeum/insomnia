@@ -8,7 +8,5 @@ fi
 
 export PATH="${PATH}:@LIBDIR@"
 
-insomnia-color < "${1}" | \
-	tr -d "\006\007" | \
-	insomnia-strftime | \
-	"${PAGER:-less}"
+insomnia-color < "${1}" | tr -d "\006\007" | \
+	insomnia-strftime | "${PAGER:-less}"

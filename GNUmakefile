@@ -4,7 +4,7 @@ LIBTGTS = insomnia-color insomnia-input insomnia-monitor insomnia-monitor-bell \
 	  insomnia-output insomnia-sort insomnia-strftime insomnia-strip-bell \
 	  insomnia-tail insomnia-topic insomnia-track-topic insomnia-unix
 
-BINFILES = $(BINTGTS)
+BINFILES = $(BINTGTS:%=bin/%)
 DATFILES = $(DATTGTS:%=data/%)
 LIBFILES = $(LIBTGTS:%=lib/%)
 
@@ -19,7 +19,7 @@ CFLAGS += -std=c99 -D_POSIX_C_SOURCE=200809L -D_BSD_SOURCE
 CFLAGS += -Wpedantic -Wall -Wextra
 
 all: $(BINFILES) $(DATFILES) $(LIBFILES)
-insomnia: insomnia.in
+bin/insomnia: bin/insomnia.in
 	sed -e 's|@LIBDIR@|$(LIBDIR)|' \
 		-e 's|@DATADIR@|$(DATADIR)|' < $< > $@
 	chmod +x $@

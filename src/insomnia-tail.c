@@ -11,6 +11,7 @@
 
 static pthread_mutex_t mtx = PTHREAD_MUTEX_INITIALIZER;
 
+/* thread-safe version of basename(dirname(fp)) */
 static ssize_t
 servername(char **dest, char *fp)
 {

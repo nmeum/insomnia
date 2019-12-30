@@ -1,5 +1,6 @@
 bin/insomnia
 bin/insomnia-pager
+lib/insomnia-color
 lib/insomnia-strftime
 lib/insomnia-unix
 lib/insomnia-tail

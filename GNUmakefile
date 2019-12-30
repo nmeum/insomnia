@@ -1,4 +1,4 @@
-BINTGTS = insomnia
+BINTGTS = insomnia insomnia-pager
 DATTGTS = inputrc
 LIBTGTS = insomnia-color insomnia-input insomnia-monitor insomnia-monitor-bell \
 	  insomnia-output insomnia-sort insomnia-strftime insomnia-strip-bell \

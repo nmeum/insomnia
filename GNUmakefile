@@ -1,12 +1,9 @@
-BINTGTS = insomnia insomnia-pager
-DATTGTS = inputrc
-LIBTGTS = insomnia-color insomnia-input insomnia-monitor insomnia-monitor-bell \
-	  insomnia-output insomnia-sort insomnia-strftime insomnia-strip-bell \
-	  insomnia-tail insomnia-topic insomnia-track-topic insomnia-unix
-
-BINFILES = $(BINTGTS:%=bin/%)
-DATFILES = $(DATTGTS:%=data/%)
-LIBFILES = $(LIBTGTS:%=lib/%)
+BINFILES = bin/insomnia bin/insomnia-pager
+DATFILES = data/inputrc
+LIBFILES = lib/insomnia-color lib/insomnia-input lib/insomnia-monitor \
+	   lib/insomnia-monitor-bell lib/insomnia-output lib/insomnia-sort \
+	   lib/insomnia-strftime lib/insomnia-strip-bell lib/insomnia-tail \
+	   lib/insomnia-topic lib/insomnia-track-topic lib/insomnia-unix
 
 PREFIX  ?= /usr/local
 LIBDIR  ?= $(PREFIX)/libexec/insomnia

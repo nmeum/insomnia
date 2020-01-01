@@ -36,16 +36,16 @@ if tmux has-session -t "=${session}" >/dev/null 2>&1; then
 fi
 
 tmux new-session -d -s "${session}" -n "monitor"                       \
-		"env ${vars} insomnia-monitor" \;                      \
+		"exec env ${vars} insomnia-monitor" \;                 \
 	set-hook -t "=${session}" client-detached                      \
 		"kill-session -t '=${session}'" \;                     \
 	set-hook -t "=${session}" client-resized                       \
 		"resize-pane -t '=insomnia.bottom' -y 1" \;            \
 	                                                               \
 	new-window -a -t "=${session}" -n "chat"                       \
-		"env ${vars} insomnia-output" \;                       \
+		"exec env ${vars} insomnia-output" \;                  \
 	split-window -t "=${session}:$" -l 1                           \
-		"env ${vars} insomnia-input" \;                        \
+		"exec env ${vars} insomnia-input" \;                   \
 	                                                               \
 	set-window-option -t "=${session}:$"                           \
 		pane-border-status top \;                              \

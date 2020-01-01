@@ -115,6 +115,11 @@ main(int argc, char **argv)
 	unsigned int delay;
 	sigset_t blockset;
 
+#ifdef __OpenBSD__
+	if (pledge("stdio", NULL) == -1)
+		err(EXIT_FAILURE, "pledge failed");
+#endif
+
 	if (argc <= 1) {
 		fprintf(stderr, "USAGE: %s DELAY\n", argv[0]);
 		return EXIT_FAILURE;

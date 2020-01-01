@@ -115,6 +115,11 @@ main(int argc, char **argv)
 	int i, nthrs;
 	pthread_t *thrs;
 
+#ifdef __OpenBSD__
+	if (pledge("stdio proc exec", NULL) == -1)
+		err(EXIT_FAILURE, "pledge failed");
+#endif
+
 	if (argc <= 1) {
 		fprintf(stderr, "USAGE: %s FILE...\n", argv[0]);
 		return EXIT_FAILURE;

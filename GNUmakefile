@@ -9,7 +9,7 @@ DOCDIR  ?= $(PREFIX)/share/doc/insomnia
 DATADIR ?= $(PREFIX)/share/insomnia
 
 CFLAGS ?= -Werror -Os
-CFLAGS += -std=c99 -D_POSIX_C_SOURCE=200809L
+CFLAGS += -std=c99 -D_POSIX_C_SOURCE=200809L -D_BSD_SOURCE
 CFLAGS += -Wpedantic -Wall -Wextra
 
 all: $(TARGETS)

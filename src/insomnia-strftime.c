@@ -65,6 +65,11 @@ main(int argc, char **argv)
 	char *cfmt, *nfmt;
 	int opt;
 
+#ifdef __OpenBSD__
+	if (pledge("stdio", NULL) == -1)
+		err(EXIT_FAILURE, "pledge failed");
+#endif
+
 	nfmt = cfmt = NULL;
 	while ((opt = getopt(argc, argv, "n:c:")) != -1) {
 		switch (opt) {

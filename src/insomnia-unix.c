@@ -17,6 +17,11 @@ main(int argc, char **argv)
 	ssize_t ret;
 	char *path, buf[BUFSIZ];
 
+#ifdef __OpenBSD__
+	if (pledge("stdio unix", NULL) == -1)
+		err(EXIT_FAILURE, "pledge failed");
+#endif
+
 	if (argc <= 1) {
 		fprintf(stderr, "USAGE: %s PATH\n", argv[0]);
 		return EXIT_FAILURE;

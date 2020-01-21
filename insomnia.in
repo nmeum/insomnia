@@ -24,10 +24,9 @@ while [ ! -p "${INSOMNIA_DIR}/in" ]; do
 	sleep 3
 done
 
-# TODO: Special characters such as `.` or `#` cannot be used in tmux
-# sesion names, thus we simply pick a very simple name for the session.
-# The issue here being that the name is not unique and only a single
-# insomnia tmux instance can thus exist at a time.
+# insomnia tries to mimic a TUI IRC client. As such, there should only
+# be a single insomnia session at a time. For this reason, the session
+# name is not unique and the session is killed automatically on detach.
 session="insomnia"
 
 if tmux has-session -t "=${session}" >/dev/null 2>&1; then

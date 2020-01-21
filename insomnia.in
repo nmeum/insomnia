@@ -53,4 +53,4 @@ tmux new-session -d -s "${session}" -n "monitor"                       \
 	select-pane -t "=${session}:$"                                 \
 		-T ""
 
-exec tmux attach -t "${session}"
+exec tmux attach -t "=${session}"

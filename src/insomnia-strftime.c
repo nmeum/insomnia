@@ -38,13 +38,15 @@ inloop(char *cfmt, char *nfmt)
 		if (errno || !(tm = localtime((time_t*)&epoch)))
 			goto cont;
 
-		if (prevday != -1 && prevday != tm->tm_yday) {
-			if ((tbuf = xstrftime(nfmt, tm)))
-				printf("Day changed to %s\n", tbuf);
+		if (*nfmt != '\0') {
+			if (prevday == -1 || prevday != tm->tm_yday) {
+				if ((tbuf = xstrftime(nfmt, tm)))
+					printf("Day changed to %s\n", tbuf);
+			}
+
+			prevday = tm->tm_yday;
 		}
 
-		if (*nfmt != '\0')
-			prevday = tm->tm_yday;
 		if (*cfmt != '\0') {
 			if ((tbuf = xstrftime(cfmt, tm)))
 				tptr = tbuf;

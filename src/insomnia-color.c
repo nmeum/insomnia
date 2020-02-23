@@ -27,7 +27,8 @@ static int colors[] = {
 	91, 92, 93, 94, 95, 96,
 };
 
-static short mflag; /* highlight mention */
+static short eflag; /* use custom format for own nick */
+static short mflag; /* highlight mentions */
 
 static int
 gencolor(char *str, size_t len)
@@ -54,7 +55,7 @@ printline(char *line, regmatch_t *time, regmatch_t *nick, regmatch_t *text)
 	nickstr = &line[nick->rm_so];
 	textstr = &line[text->rm_so];
 
-	if (*suffix == '\006') { /* send by own client */
+	if (eflag && *suffix == '\006') { /* send by own client */
 		color = CECHO;
 		attribute = FBOLD;
 	} else {
@@ -88,8 +89,11 @@ main(int argc, char **argv)
 		err(EXIT_FAILURE, "pledge failed");
 #endif
 
-	while ((opt = getopt(argc, argv, "m")) != -1) {
+	while ((opt = getopt(argc, argv, "em")) != -1) {
 		switch (opt) {
+		case 'e':
+			eflag = 1;
+			break;
 		case 'm':
 			mflag = 1;
 			break;

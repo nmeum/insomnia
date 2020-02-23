@@ -12,6 +12,6 @@ printf '\033]2;%s\033\\' "$(insomnia-topic)"
 
 tail -n 128 -f "${outfp}" | \
 	insomnia-track-topic | \
-	insomnia-color ${ischan:+-m} | \
+	insomnia-color -e ${ischan:+-m} | \
 	insomnia-strip-bell | \
 	insomnia-strftime

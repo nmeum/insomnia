@@ -10,11 +10,16 @@
 #define REGEXPR "^([0-9]+) \\((.+)\\) (.*)$"
 #define REGSUBS 4 /* 3 subexpressions +1 for entire expression */
 
-#define CECHO 37 /* white */
-#define CHIGH 31 /* red */
-
 #define LEN(X) (sizeof(X) / sizeof(X[0]))
 #define MATCHLEN(X) ((int)(X->rm_eo - X->rm_so))
+
+enum {
+	CECHO = 37, /* white */
+	CHIGH = 31, /* red */
+
+	FBOLD = 1,  /* bold font */
+	FNORM = 10, /* normal font */
+}
 
 /* See https://en.wikipedia.org/wiki/ANSI_escape_code#3/4_bit */
 static int colors[] = {
@@ -49,10 +54,10 @@ printline(char *line, regmatch_t *time, regmatch_t *nick, regmatch_t *text)
 
 	if (*suffix == '\006') { /* send by own client */
 		color = CECHO;
-		attribute = 1; /* bold font */
+		attribute = FBOLD;
 	} else {
 		color = gencolor(nickstr, MATCHLEN(nick));
-		attribute = 10; /* normal font */
+		attribute = FNORM;
 	}
 
 	printf("%.*s (\033[%d;%dm%.*s\033[0m) ",

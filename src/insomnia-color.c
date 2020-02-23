@@ -3,6 +3,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 #include <sys/types.h>
 
@@ -73,6 +74,11 @@ main(void)
 	regmatch_t matches[REGSUBS];
 	static char *line;
 	static size_t len;
+
+#ifdef __OpenBSD__
+	if (pledge("stdio", NULL) == -1)
+		err(EXIT_FAILURE, "pledge failed");
+#endif
 
 	if (regcomp(&reg, REGEXPR, REG_EXTENDED))
 		errx(EXIT_FAILURE, "regcomp failed");

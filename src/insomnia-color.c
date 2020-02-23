@@ -27,6 +27,8 @@ static int colors[] = {
 	91, 92, 93, 94, 95, 96,
 };
 
+static short mflag; /* highlight mention */
+
 static int
 gencolor(char *str, size_t len)
 {
@@ -65,7 +67,7 @@ printline(char *line, regmatch_t *time, regmatch_t *nick, regmatch_t *text)
 	       color, attribute,
 	       MATCHLEN(nick), nickstr);
 
-	if (*suffix == '\007') /* text contains mention */
+	if (mflag && *suffix == '\007') /* text contains mention */
 		printf("\033[%dm%.*s\033[0m%s", CHIGH,
 		       (int)(suffix - textstr), textstr, suffix);
 	else
@@ -73,8 +75,9 @@ printline(char *line, regmatch_t *time, regmatch_t *nick, regmatch_t *text)
 }
 
 int
-main(void)
+main(int argc, char **argv)
 {
+	int opt;
 	regex_t reg;
 	regmatch_t matches[REGSUBS];
 	static char *line;
@@ -84,6 +87,14 @@ main(void)
 	if (pledge("stdio", NULL) == -1)
 		err(EXIT_FAILURE, "pledge failed");
 #endif
+
+	while ((opt = getopt(argc, argv, "m")) != -1) {
+		switch (opt) {
+		case 'm':
+			mflag = 1;
+			break;
+		}
+	}
 
 	if (regcomp(&reg, REGEXPR, REG_EXTENDED))
 		errx(EXIT_FAILURE, "regcomp failed");

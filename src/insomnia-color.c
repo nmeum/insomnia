@@ -19,7 +19,7 @@ enum {
 
 	FBOLD = 1,  /* bold font */
 	FNORM = 10, /* normal font */
-}
+};
 
 /* See https://en.wikipedia.org/wiki/ANSI_escape_code#3/4_bit */
 static int colors[] = {

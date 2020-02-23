@@ -7,8 +7,11 @@ outfp="${INSOMNIA_DIR}/out"
 # Set tmux pane-title to topic
 printf '\033]2;%s\033\\' "$(insomnia-topic)"
 
+# Only highlight mentions in channels
+[ -S "${INSOMNIA_DIR}/usr" ] && ischan=1
+
 tail -n 128 -f "${outfp}" | \
 	insomnia-track-topic | \
-	insomnia-color | \
+	insomnia-color ${ischan:+-m} | \
 	insomnia-strip-bell | \
 	insomnia-strftime

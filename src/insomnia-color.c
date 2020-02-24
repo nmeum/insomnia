@@ -7,7 +7,7 @@
 
 #include <sys/types.h>
 
-#define REGEXPR "^([0-9]+) \\(([^\\)]+)\\) (.*)$"
+#define REGEXPR "^([0-9]+) \\(([^)]+)\\) (.*)$"
 #define REGSUBS 4 /* 3 subexpressions +1 for entire expression */
 
 #define LEN(X) (sizeof(X) / sizeof(X[0]))

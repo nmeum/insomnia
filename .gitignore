@@ -1,5 +1,5 @@
 bin/insomnia
-lib/insomnia-strftime
+bin/insomnia-strftime
 lib/insomnia-unix
 lib/insomnia-tail
 lib/insomnia-sort

@@ -49,7 +49,7 @@ special and need to be set for both targets `make` and `make install`.
 In case you don't want to install insomnia globally but just want to
 experiment with it compile insomnia using the following commands:
 
-	$ export LIBDIR="$(pwd)/lib" DATADIR="$(pwd)/data"
+	$ export LIBDIR="$(pwd)/lib" DATADIR="$(pwd)/data" PATH="$PATH:$(pwd)/bin"
 	$ make
 
 ## Usage

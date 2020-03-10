@@ -1,9 +1,9 @@
-BINFILES = bin/insomnia
+BINFILES = bin/insomnia bin/insomnia-strftime
 DATFILES = data/inputrc
 LIBFILES = lib/insomnia-color lib/insomnia-input lib/insomnia-monitor \
 	   lib/insomnia-monitor-bell lib/insomnia-output lib/insomnia-sort \
-	   lib/insomnia-strftime lib/insomnia-strip-bell lib/insomnia-tail \
-	   lib/insomnia-topic lib/insomnia-track-topic lib/insomnia-unix
+	   lib/insomnia-strip-bell lib/insomnia-tail lib/insomnia-topic \
+	   lib/insomnia-track-topic lib/insomnia-unix
 
 PREFIX  ?= /usr/local
 LIBDIR  ?= $(PREFIX)/libexec/insomnia
@@ -16,6 +16,8 @@ CFLAGS += -std=c99 -D_POSIX_C_SOURCE=200809L -D_BSD_SOURCE
 CFLAGS += -Wpedantic -Wall -Wextra
 
 all: $(BINFILES) $(DATFILES) $(LIBFILES)
+bin/insomnia-%: bin/insomnia-%.c
+	$(CC) -o $@ $< $(CFLAGS) $(LDFLAGS)
 bin/%: bin/%.in
 	sed -e 's|@LIBDIR@|$(LIBDIR)|' \
 		-e 's|@DATADIR@|$(DATADIR)|' < $< > $@

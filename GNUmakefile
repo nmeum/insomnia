@@ -1,6 +1,9 @@
-TARGETS = insomnia lib/insomnia-strftime \
-	  lib/insomnia-unix lib/insomnia-tail \
-	  lib/insomnia-sort lib/insomnia-color
+BINFILES = bin/insomnia
+DATFILES = data/inputrc
+LIBFILES = lib/insomnia-color lib/insomnia-input lib/insomnia-monitor \
+	   lib/insomnia-monitor-bell lib/insomnia-output lib/insomnia-sort \
+	   lib/insomnia-strftime lib/insomnia-strip-bell lib/insomnia-tail \
+	   lib/insomnia-topic lib/insomnia-track-topic lib/insomnia-unix
 
 PREFIX  ?= /usr/local
 LIBDIR  ?= $(PREFIX)/libexec/insomnia
@@ -12,31 +15,24 @@ CFLAGS ?= -Werror -Os
 CFLAGS += -std=c99 -D_POSIX_C_SOURCE=200809L -D_BSD_SOURCE
 CFLAGS += -Wpedantic -Wall -Wextra
 
-all: $(TARGETS)
-insomnia: insomnia.in
+all: $(BINFILES) $(DATFILES) $(LIBFILES)
+bin/%: bin/%.in
 	sed -e 's|@LIBDIR@|$(LIBDIR)|' \
 		-e 's|@DATADIR@|$(DATADIR)|' < $< > $@
 	chmod +x $@
 
-lib/insomnia-strftime: src/insomnia-strftime.c
+lib/insomnia-tail: LDFLAGS += -pthread
+lib/insomnia-%: lib/insomnia-%.c
 	$(CC) -o $@ $< $(CFLAGS) $(LDFLAGS)
-lib/insomnia-unix: src/insomnia-unix.c
-	$(CC) -o $@ $< $(CFLAGS) $(LDFLAGS)
-lib/insomnia-tail: src/insomnia-tail.c
-	$(CC) -o $@ $< $(CFLAGS) -pthread $(LDFLAGS)
-lib/insomnia-sort: src/insomnia-sort.c
-	$(CC) -o $@ $< $(CFLAGS) $(LDFLAGS)
-lib/insomnia-color: src/insomnia-color.c
-	$(CC) -o $@ $< $(CFLAGS) -pthread $(LDFLAGS)
 
 install: $(TARGETS) README.md
-	install -Dm755 insomnia "$(DESTDIR)$(BINDIR)/insomnia"
-	install -dm755 "$(DESTDIR)$(LIBDIR)" "$(DESTDIR)$(DATADIR)"
-	install -Dm755 $(wildcard ./lib/*) "$(DESTDIR)$(LIBDIR)"
-	install -Dm644 $(wildcard ./data/*) "$(DESTDIR)$(DATADIR)"
+	install -dm755 "$(DESTDIR)$(BINDIR)" "$(DESTDIR)$(LIBDIR)" "$(DESTDIR)$(DATADIR)"
+	install -Dm755 $(BINFILES) "$(DESTDIR)$(BINDIR)"
+	install -Dm755 $(LIBFILES) "$(DESTDIR)$(LIBDIR)"
+	install -Dm644 $(DATFILES) "$(DESTDIR)$(DATADIR)"
 	install -Dm644 README.md "$(DESTDIR)$(DOCDIR)/README.md"
 
 clean:
-	rm -f $(TARGETS)
+	@git clean -fdX
 
 .PHONY: all install clean

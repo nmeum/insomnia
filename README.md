@@ -46,11 +46,15 @@ Consult the `GNUmakefile` for environment variables which can be used to
 configure the installation. The variables `LIBDIR` and `DATADIR` are
 special and need to be set for both targets `make` and `make install`.
 
+### Development setup
+
 In case you don't want to install insomnia globally but just want to
 experiment with it compile insomnia using the following commands:
 
 	$ export LIBDIR="$(pwd)/lib" DATADIR="$(pwd)/data"
 	$ make
+
+Afterwards run `./bin/insomnia`.
 
 ## Usage
 

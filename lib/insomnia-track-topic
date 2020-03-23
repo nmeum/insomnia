@@ -6,7 +6,8 @@
 	for (i = 11; i <= NF; i++)
 		topic = topic " " $i
 
-	printf("\033]2;%s\033\\", topic)
+	# Append escape sequence for setting tmux pane title.
+	$0 = $0 sprintf("\033]2;%s\033\\", topic)
 }
 
 {

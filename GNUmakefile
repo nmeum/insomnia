@@ -25,7 +25,7 @@ lib/insomnia-tail: LDFLAGS += -pthread
 lib/insomnia-%: lib/insomnia-%.c
 	$(CC) -o $@ $< $(CFLAGS) $(LDFLAGS)
 
-install: $(TARGETS) README.md
+install: all
 	install -dm755 "$(DESTDIR)$(BINDIR)" "$(DESTDIR)$(LIBDIR)" "$(DESTDIR)$(DATADIR)"
 	install -Dm755 $(BINFILES) "$(DESTDIR)$(BINDIR)"
 	install -Dm755 $(LIBFILES) "$(DESTDIR)$(LIBDIR)"

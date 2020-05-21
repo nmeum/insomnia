@@ -46,9 +46,9 @@ exec tmux new-session -d -s "${session}" -n "monitor"                  \
 	split-window -l 1                                              \
 		"exec env ${vars} insomnia-input" \;                   \
 	                                                               \
-	set-window-option                                              \
+	set-option -w                                                  \
 		pane-border-status top \;                              \
-	set-window-option                                              \
+	set-option -w                                                  \
 		pane-border-format "#T" \;                             \
 	select-pane -T "" \;                                           \
 	                                                               \

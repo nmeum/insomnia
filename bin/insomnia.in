@@ -34,23 +34,22 @@ if tmux has-session -t "=${session}" >/dev/null 2>&1; then
 	exit 1
 fi
 
-tmux new-session -d -s "${session}" -n "monitor"                       \
+exec tmux new-session -d -s "${session}" -n "monitor"                  \
 		"exec env ${vars} insomnia-monitor" \;                 \
-	set-hook -t "=${session}" client-detached                      \
+	set-hook client-detached                                       \
 		"kill-session -t '=${session}'" \;                     \
-	set-hook -t "=${session}" client-resized                       \
-		"resize-pane -t '=insomnia.bottom' -y 1" \;            \
+	set-hook client-resized                                        \
+		"resize-pane -t '=${session}.bottom' -y 1" \;          \
 	                                                               \
-	new-window -a -t "=${session}" -n "chat"                       \
+	new-window -a -n "chat"                                        \
 		"exec env ${vars} insomnia-output" \;                  \
-	split-window -t "=${session}:$" -l 1                           \
+	split-window -l 1                                              \
 		"exec env ${vars} insomnia-input" \;                   \
 	                                                               \
-	set-window-option -t "=${session}:$"                           \
+	set-window-option                                              \
 		pane-border-status top \;                              \
-	set-window-option -t "=${session}:$"                           \
+	set-window-option                                              \
 		pane-border-format "#T" \;                             \
-	select-pane -t "=${session}:$"                                 \
-		-T ""
-
-exec tmux attach -t "=${session}"
+	select-pane -T "" \;                                           \
+	                                                               \
+	attach

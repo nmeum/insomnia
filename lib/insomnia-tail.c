@@ -117,20 +117,22 @@ tail(void *arg)
 
 	switch ((pid = fork())) {
 	case 0:
+		close(p[0]); /* close unused read-end */
 		close(STDOUT_FILENO);
 		dup(p[1]);
+		close(p[1]);
 
 		execlp("tail", "tail", "-f", fp, (char*)NULL);
 		err(EXIT_FAILURE, "execlp failed");
 	case -1:
 		err(EXIT_FAILURE, "fork failed");
 	default:
+		close(p[1]); /* close unused write-end */
 		if (!(stream = fdopen(p[0], "r")))
 		       err(EXIT_FAILURE, "fdopen failed");
-		readlines(fp, stream); /* returns on stream EOF */
 
-		if (close(p[0]) || close(p[1]))
-			err(EXIT_FAILURE, "close failed");
+		readlines(fp, stream);
+		close(p[0]);
 	}
 
 	return NULL;

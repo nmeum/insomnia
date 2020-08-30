@@ -76,7 +76,7 @@ tail(void *arg)
 {
 	pid_t pid;
 	FILE *stream;
-	int ret, p[2], wstatus;
+	int p[2], wstatus;
 	char *fp;
 
 	fp = arg;
@@ -99,8 +99,8 @@ tail(void *arg)
 
 		if (waitpid(pid, &wstatus, 0) == -1)
 			err(EXIT_FAILURE, "waitpid failed");
-		else if ((ret = WIFEXITED(wstatus)))
-			exit(ret);
+		else if (WIFEXITED(wstatus))
+			exit(WEXITSTATUS(wstatus));
 
 		if (close(p[0]) || close(p[1]))
 			err(EXIT_FAILURE, "close failed");

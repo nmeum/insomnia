@@ -82,7 +82,7 @@ sethandler(void)
 	if (sigemptyset(&act.sa_mask) == -1)
 		err(EXIT_FAILURE, "sigemptyset failed");
 	if (sigaction(SIGALRM, &act, NULL))
-			err(EXIT_FAILURE, "sigaction failed");
+		err(EXIT_FAILURE, "sigaction failed");
 }
 
 static void

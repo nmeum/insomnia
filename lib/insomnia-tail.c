@@ -1,6 +1,7 @@
 #include <err.h>
 #include <errno.h>
 #include <pthread.h>
+#include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -10,6 +11,37 @@
 #include <sys/types.h>
 
 static pthread_mutex_t mtx = PTHREAD_MUTEX_INITIALIZER;
+
+static void
+sigchld(int num)
+{
+	pid_t r;
+	int status, wstatus;
+
+	(void)num;
+
+	status = EXIT_SUCCESS;
+	while ((r = waitpid((pid_t)-1, &wstatus, WNOHANG)) > 0) {
+		if (WIFEXITED(wstatus) && status == EXIT_SUCCESS)
+			status = WEXITSTATUS(wstatus);
+	}
+
+	if (status != EXIT_SUCCESS)
+		exit(status);
+}
+
+static void
+sethandler(void)
+{
+	struct sigaction act;
+
+	act.sa_flags = SA_RESTART;
+	act.sa_handler = sigchld;
+	if (sigemptyset(&act.sa_mask) == -1)
+		err(EXIT_FAILURE, "sigemptyset failed");
+	if (sigaction(SIGCHLD, &act, NULL))
+		err(EXIT_FAILURE, "sigaction failed");
+}
 
 /* thread-safe version of basename(dirname(fp)) */
 static ssize_t
@@ -76,7 +108,7 @@ tail(void *arg)
 {
 	pid_t pid;
 	FILE *stream;
-	int ret, p[2], wstatus;
+	int p[2];
 	char *fp;
 
 	fp = arg;
@@ -85,25 +117,22 @@ tail(void *arg)
 
 	switch ((pid = fork())) {
 	case 0:
+		close(p[0]); /* close unused read-end */
 		close(STDOUT_FILENO);
 		dup(p[1]);
+		close(p[1]);
 
 		execlp("tail", "tail", "-f", fp, (char*)NULL);
 		err(EXIT_FAILURE, "execlp failed");
 	case -1:
 		err(EXIT_FAILURE, "fork failed");
 	default:
+		close(p[1]); /* close unused write-end */
 		if (!(stream = fdopen(p[0], "r")))
 		       err(EXIT_FAILURE, "fdopen failed");
+
 		readlines(fp, stream);
-
-		if (waitpid(pid, &wstatus, 0) == -1)
-			err(EXIT_FAILURE, "waitpid failed");
-		else if ((ret = WIFEXITED(wstatus)))
-			exit(ret);
-
-		if (close(p[0]) || close(p[1]))
-			err(EXIT_FAILURE, "close failed");
+		close(p[0]);
 	}
 
 	return NULL;
@@ -124,6 +153,9 @@ main(int argc, char **argv)
 		fprintf(stderr, "USAGE: %s FILE...\n", argv[0]);
 		return EXIT_FAILURE;
 	}
+
+	/* Setup SIGCHLD handler */
+	sethandler();
 
 	nthrs = argc - 1;
 	if (!(thrs = malloc(sizeof(pthread_t*) * nthrs)))

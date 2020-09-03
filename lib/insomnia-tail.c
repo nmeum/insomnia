@@ -15,13 +15,12 @@ static pthread_mutex_t mtx = PTHREAD_MUTEX_INITIALIZER;
 static void
 sigchld(int num)
 {
-	pid_t r;
 	int status, wstatus;
 
 	(void)num;
 
 	status = EXIT_SUCCESS;
-	while ((r = waitpid((pid_t)-1, &wstatus, WNOHANG)) > 0) {
+	while (waitpid((pid_t)-1, &wstatus, WNOHANG) > 0) {
 		if (WIFEXITED(wstatus) && status == EXIT_SUCCESS)
 			status = WEXITSTATUS(wstatus);
 	}

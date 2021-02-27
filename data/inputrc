@@ -15,7 +15,8 @@
 # upstream, i.e. automatically set these option for terminals of height
 # one. Upstream accepted a patch for (2) which should be included in
 # newer readline versions [1]. I haven't tried proposing a patch for (1)
-# yet though.
+# yet though. Furthermore, I recently started adding additional readline
+# options which are useful in the insomnia context to this file.
 #
 # [1]: https://lists.gnu.org/archive/html/bug-readline/2019-11/msg00009.html
 
@@ -24,3 +25,6 @@
 
 # Use a single line for scrolling
 set horizontal-scroll-mode on
+
+# Prevent input with newlines to cause emittion of multiple IRC messages.
+set enable-bracketed-paste on

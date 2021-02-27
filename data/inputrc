@@ -13,12 +13,11 @@
 #
 # I would personally prefer if these issue where addressed by readline
 # upstream, i.e. automatically set these option for terminals of height
-# one. Unfortunately upstream seems to be reluctant to automatically
-# changing option values [1]. Therefore, insomnia supplies its own
-# readline configuration file which (sadly) takes precedence over any
-# user supplied configuration files.
+# one. Upstream accepted a patch for (2) which should be included in
+# newer readline versions [1]. I haven't tried proposing a patch for (1)
+# yet though.
 #
-# [1]: https://lists.gnu.org/archive/html/bug-readline/2019-11/msg00007.html
+# [1]: https://lists.gnu.org/archive/html/bug-readline/2019-11/msg00009.html
 
 # Cycle through completions, don't use multiple lines
 "\t": menu-complete

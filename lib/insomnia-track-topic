@@ -3,7 +3,7 @@
 /^[0-9]+ \*\*\* .+ has set the topic to: .*$/ {
 	# XXX: The code here potentially reformats the topic
 	topic = $9
-	for (i = 11; i <= NF; i++)
+	for (i = 10; i <= NF; i++)
 		topic = topic " " $i
 
 	# Append escape sequence for setting tmux pane title.

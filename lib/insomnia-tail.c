@@ -131,7 +131,7 @@ tail(void *arg)
 		       err(EXIT_FAILURE, "fdopen failed");
 
 		readlines(fp, stream);
-		close(p[0]);
+		fclose(stream);
 	}
 
 	return NULL;

@@ -33,6 +33,8 @@ inloop(char *cfmt, char *nfmt)
 	struct tm *tm;
 
 	while (getline(&line, &llen, stdin) != -1) {
+		tptr = NULL;
+
 		errno = 0;
 		epoch = strtoull(line, &tend, 10);
 		if (errno || !(tm = localtime((time_t*)&epoch)))
@@ -53,7 +55,10 @@ inloop(char *cfmt, char *nfmt)
 		}
 
 cont:
-		printf("%s%s", tptr, tend);
+		if (tptr)
+			printf("%s%s", tptr, tend);
+		else
+			printf("%s", tend);
 	}
 
 	if (ferror(stdin))

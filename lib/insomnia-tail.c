@@ -157,7 +157,7 @@ main(int argc, char **argv)
 	sethandler();
 
 	nthrs = argc - 1;
-	if (!(thrs = malloc(sizeof(pthread_t*) * nthrs)))
+	if (!(thrs = malloc(sizeof(pthread_t) * nthrs)))
 		err(EXIT_FAILURE, "malloc failed");
 
 	for (i = 0; i < nthrs; i++)

@@ -105,7 +105,6 @@ readlines(char *fp, FILE *stream)
 static void*
 tail(void *arg)
 {
-	pid_t pid;
 	FILE *stream;
 	int p[2];
 	char *fp;
@@ -114,7 +113,7 @@ tail(void *arg)
 	if (pipe(p))
 		err(EXIT_FAILURE, "pipe failed");
 
-	switch ((pid = fork())) {
+	switch (fork()) {
 	case 0:
 		close(p[0]); /* close unused read-end */
 		close(STDOUT_FILENO);

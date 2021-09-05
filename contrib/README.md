@@ -20,7 +20,7 @@ It requires the following Termux apps to be installed:
 Additionally, the following command must be run inside a Termux session
 to install all required package dependencies:
 
-	pkg install termux-api openssh mosh jq
+	pkg install termux-api mosh jq
 
 Additionally, `termux-client` itself must be configured by editing it
 and setting the `HOST` and `IDIR` variables to appropriate values.

@@ -1,0 +1,23 @@
+#!/bin/sh
+set -e
+
+# Host on which insomnia / hii are runnig.
+HOST="someuser@example.org"
+
+# Relative path to hii IRC directory on the host.
+IDIR="irc"
+
+target=$(ssh "${HOST}" find "${IDIR}" -maxdepth 3 -name in -a -type p | \
+	awk -F / '{ printf("%s/%s\n", $2, $3) }' | fzf)
+
+if [ -z "${target}" ]; then
+	exit 0
+elif [ "${target}" = "${target%%/*}" ]; then
+	server="${target}"
+	target=""
+else
+	server="${target%%/*}"
+	target="${target##*/}"
+fi
+
+exec mosh "${HOST}" -- insomnia "${server}" "${target}"

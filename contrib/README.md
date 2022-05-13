@@ -5,6 +5,12 @@ subject to any robustness or stability criteria. This document contains
 a section for each script contained in this directory further explaining
 how it is intended to be used.
 
+## irc-menu
+
+This script spawns an insomnia instance on a remote machine using
+[mosh][mosh web], it allows selecting the channel for which the instance
+should be spawned interactively using [fzf][fzf github].
+
 ## termux-client
 
 This script allows using insomnia from Android phones running
@@ -29,6 +35,8 @@ Afterwards, the script can be installed by creating the directory
 it executable. If successful, `termux-client` can be added to your home
 screen as 1x1 widget.
 
+[mosh web]: https://mosh.org
+[fzf github]: https://github.com/junegunn/fzf
 [termux website]: https://termux.com/
 [termux widget]: https://wiki.termux.com/wiki/Termux:Widget
 [fdroid com.termux]: https://f-droid.org/packages/com.termux/

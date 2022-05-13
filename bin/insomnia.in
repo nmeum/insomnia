@@ -38,7 +38,7 @@ exec tmux new-session -d -s "${session}" -n "monitor"                  \
 		"exec env ${vars} insomnia-monitor" \;                 \
 	set-hook client-detached                                       \
 		"kill-session -t '=${session}'" \;                     \
-	set-hook client-resized                                        \
+	set-hook -g window-resized                                     \
 		"resize-pane -t '=${session}.bottom' -y 1" \;          \
 	                                                               \
 	new-window -a -n "chat"                                        \

@@ -19,7 +19,7 @@ all: $(BINFILES) $(DATFILES) $(LIBFILES)
 bin/%: bin/%.in
 	sed -e 's|@LIBDIR@|$(LIBDIR)|' \
 		-e 's|@DATADIR@|$(DATADIR)|' < $< > $@
-	chmod +x $@
+	chmod +x-w $@
 
 lib/insomnia-tail: LDFLAGS += -pthread
 lib/insomnia-%: lib/insomnia-%.c

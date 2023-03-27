@@ -21,7 +21,7 @@ enum {
 	FNORM = 10, /* normal font */
 };
 
-/* See https://en.wikipedia.org/wiki/ANSI_escape_code#3/4_bit */
+/* See https://en.wikipedia.org/wiki/ANSI_escape_code#3-bit_and_4-bit */
 static int colors[] = {
 	31, 32, 33, 34, 35, 36,
 	91, 92, 93, 94, 95, 96,

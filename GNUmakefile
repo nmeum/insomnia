@@ -17,6 +17,7 @@ CFLAGS += -Wpedantic -Wall -Wextra
 
 all: $(BINFILES) $(DATFILES) $(LIBFILES)
 bin/%: bin/%.in
+	chmod +w $@
 	sed -e 's|@LIBDIR@|$(LIBDIR)|' \
 		-e 's|@DATADIR@|$(DATADIR)|' < $< > $@
 	chmod +x-w $@

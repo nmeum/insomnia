@@ -12,14 +12,14 @@ DOCDIR  ?= $(PREFIX)/share/doc/insomnia
 DATADIR ?= $(PREFIX)/share/insomnia
 
 CFLAGS ?= -Werror -Os
-CFLAGS += -std=c99 -D_POSIX_C_SOURCE=200809L -D_BSD_SOURCE
+CFLAGS += -std=c99 -D_POSIX_C_SOURCE=200809L -D_DEFAULT_SOURCE
 CFLAGS += -Wpedantic -Wall -Wextra
 
 all: $(BINFILES) $(DATFILES) $(LIBFILES)
 bin/%: bin/%.in
-	chmod +w $@
 	sed -e 's|@LIBDIR@|$(LIBDIR)|' \
 		-e 's|@DATADIR@|$(DATADIR)|' < $< > $@
+	chmod +w $@
 	chmod +x-w $@
 
 lib/insomnia-tail: LDFLAGS += -pthread

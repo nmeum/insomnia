@@ -17,10 +17,9 @@ CFLAGS += -Wpedantic -Wall -Wextra
 
 all: $(BINFILES) $(DATFILES) $(LIBFILES)
 bin/%: bin/%.in
-	chmod +w $@
 	sed -e 's|@LIBDIR@|$(LIBDIR)|' \
 		-e 's|@DATADIR@|$(DATADIR)|' < $< > $@
-	chmod +x-w $@
+	chmod +x $@
 
 lib/insomnia-tail: LDFLAGS += -pthread
 lib/insomnia-%: lib/insomnia-%.c

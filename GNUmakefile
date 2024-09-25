@@ -12,8 +12,13 @@ DOCDIR  ?= $(PREFIX)/share/doc/insomnia
 DATADIR ?= $(PREFIX)/share/insomnia
 
 CFLAGS ?= -Werror -Os
-CFLAGS += -std=c99 -D_POSIX_C_SOURCE=200809L -D_BSD_SOURCE
+CFLAGS += -std=c99 -D_POSIX_C_SOURCE=200809L
 CFLAGS += -Wpedantic -Wall -Wextra
+
+ifeq ($(shell uname -s), OpenBSD)
+	# Needed for pledge(2) prototype in unistd.h.
+	CFLAGS += -D_BSD_SOURCE
+endif
 
 all: $(BINFILES) $(DATFILES) $(LIBFILES)
 bin/%: bin/%.in

@@ -90,7 +90,6 @@ inloop(sigset_t *blockset)
 {
 	static char *line;
 	static size_t llen;
-	sigset_t oldset;
 
 	while (getline(&line, &llen, stdin) != -1) {
 		if (sortdone) {
@@ -99,10 +98,10 @@ inloop(sigset_t *blockset)
 			continue;
 		}
 
-		if (sigprocmask(SIG_BLOCK, blockset, &oldset))
+		if (sigprocmask(SIG_BLOCK, blockset, NULL))
 			err(EXIT_FAILURE, "signal blocking failed");
 		bufferline(line);
-		if (sigprocmask(SIG_SETMASK, &oldset, NULL))
+		if (sigprocmask(SIG_UNBLOCK, blockset, NULL))
 			err(EXIT_FAILURE, "signal unblocking failed");
 	}
 	if (ferror(stdin))

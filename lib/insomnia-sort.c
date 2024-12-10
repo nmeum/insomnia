@@ -9,7 +9,7 @@
 
 static char **lines;
 static size_t nlines;
-static int sortdone;
+static volatile sig_atomic_t sortdone;
 
 enum {
 	LINESTEP = 16,

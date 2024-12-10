@@ -92,7 +92,7 @@ inloop(sigset_t *blockset)
 	static size_t llen;
 
 	while (getline(&line, &llen, stdin) != -1) {
-		if (sortdone) {
+		if (sortdone) { // Just behave like tee(1) from now on.
 			printf("%s", line);
 			fflush(stdout);
 			continue;

@@ -44,7 +44,8 @@ sortprint(void)
 
 	for (i = 0; i < nlines; i++)
 		free(lines[i]);
-	free(lines);
+	if (lines)
+		free(lines);
 	lines = NULL;
 	nlines = 0;
 }

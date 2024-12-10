@@ -118,7 +118,7 @@ tail(void *arg)
 	case 0:
 		close(p[0]); /* close unused read-end */
 		close(STDOUT_FILENO);
-		dup(p[1]);
+		dup2(p[1], STDOUT_FILENO);
 		close(p[1]);
 
 		execlp("tail", "tail", "-f", fp, (char*)NULL);

@@ -21,8 +21,9 @@ sigchld(int num)
 
 	status = EXIT_SUCCESS;
 	while (waitpid((pid_t)-1, &wstatus, WNOHANG) > 0) {
-		if (WIFEXITED(wstatus) && status == EXIT_SUCCESS)
-			status = WEXITSTATUS(wstatus);
+		if (status != EXIT_SUCCESS)
+			continue;
+		status = (WIFEXITED(wstatus)) ? WEXITSTATUS(wstatus) : EXIT_FAILURE;
 	}
 
 	if (status != EXIT_SUCCESS)

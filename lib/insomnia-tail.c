@@ -74,7 +74,8 @@ servername(char **dest, char *fp)
 static void
 readlines(char *fp, FILE *stream)
 {
-	size_t llen, nlen;
+	size_t llen;
+	ssize_t nlen;
 	char *nickstart, *line, *name;
 
 	line = NULL;

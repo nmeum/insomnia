@@ -136,6 +136,7 @@ main(int argc, char **argv)
 	alarm(delay);
 
 	inloop(&blockset);
+	alarm(0); // Cancel alarm to prevent sortprint()-race
 	sortprint();
 
 	return EXIT_SUCCESS;

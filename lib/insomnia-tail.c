@@ -118,8 +118,8 @@ tail(void *arg)
 	switch (fork()) {
 	case 0:
 		close(p[0]); /* close unused read-end */
-		close(STDOUT_FILENO);
-		dup2(p[1], STDOUT_FILENO);
+		if (dup2(p[1], STDOUT_FILENO) == -1)
+			err(EXIT_FAILURE, "dup2 failed");
 		close(p[1]);
 
 		execlp("tail", "tail", "-f", fp, (char*)NULL);
